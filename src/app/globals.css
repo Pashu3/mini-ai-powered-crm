@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: light;
+    
+    --background: #D9E1F1;
+    --foreground: #001D3F;
+    --primary: #054E98;
+    --primary-foreground: #ffffff;
+    --secondary: #04356A;
+    --secondary-foreground: #ffffff;
+    --muted: #e9edf7;
+    --muted-foreground: #455980;
+    --accent: #7a9cd1;
+    --accent-foreground: #001D3F;
+    --card: #ECF0F9;  
+    --card-foreground: #001D3F;
+    --border: #c0cde7;
+    --input: #E3E9F4;  
+  }
+  
+  .dark {
+    color-scheme: dark;
+    
+    --background: #0A1929;
+    --foreground: #E2EAFC;
+    --primary: #3B82F6;
+    --primary-foreground: #ffffff;
+    --secondary: #1E40AF;
+    --secondary-foreground: #ffffff;
+    --muted: #172436;
+    --muted-foreground: #94A3B8;
+    --accent: #4F6BBA;
+    --accent-foreground: #FFFFFF;
+    --card: #111B2F;
+    --card-foreground: #E2EAFC;
+    --border: #2A3A53;
+    --input: #172436;
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
