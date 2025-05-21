@@ -350,7 +350,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\HP\\Desktop\\mini-ai-powered-crm\\src\\generated\\prisma",
+      "value": "C:\\Users\\HP\\Desktop\\v2\\mini-ai-powered-crm\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -364,7 +364,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\HP\\Desktop\\mini-ai-powered-crm\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\HP\\Desktop\\v2\\mini-ai-powered-crm\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -378,6 +378,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mongodb",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
