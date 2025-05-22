@@ -20,7 +20,8 @@ import {
   UserPlus,
   Tag,
   BarChart3,
-  Inbox
+  Inbox,
+  FileDown
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -29,6 +30,7 @@ import { getStageColor, getSourceColor } from "@/utils/styleHelpers";
 import { Lead, LeadStage, LeadSource } from "@/types/lead";
 import KanbanView from "@/components/leads/KanbanView";
 import DeleteLeadConfirmation from "@/components/leads/DeleteLeadConfirmation";
+import ExportModal from "@/src/components/ExportModal";
 interface LeadResponse {
   leads: Lead[];
   total: number;
@@ -69,6 +71,8 @@ function LeadsContent() {
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+
 
   const [searchTerm, setSearchTerm] = useState<string>(searchParams.get('search') || '');
   const [selectedStage, setSelectedStage] = useState<LeadStage | undefined>(
@@ -115,16 +119,13 @@ function LeadsContent() {
     isDeleted: boolean;
   } | null>(null);
 
-  // Available tags for filtering (will be populated from leads)
   const [availableTags, setAvailableTags] = useState<string[]>([]);
 
-  // Create refs for dropdown containers
   const viewDropdownRef = useRef<HTMLDivElement>(null);
   const stageDropdownRef = useRef<HTMLDivElement>(null);
   const sourceDropdownRef = useRef<HTMLDivElement>(null);
   const moreFiltersRef = useRef<HTMLDivElement>(null);
 
-  // Extract all unique tags from leads
   useEffect(() => {
     if (leads.length > 0) {
       const allTags = leads.flatMap(lead => lead.tags || []);
@@ -133,25 +134,20 @@ function LeadsContent() {
     }
   }, [leads]);
 
-  // Handle click outside to close dropdowns
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      // Close view dropdown when clicking outside
       if (viewDropdownRef.current && !viewDropdownRef.current.contains(event.target as Node)) {
         setViewDropdownOpen(false);
       }
 
-      // Close stage dropdown when clicking outside
       if (stageDropdownRef.current && !stageDropdownRef.current.contains(event.target as Node)) {
         setStageDropdownOpen(false);
       }
 
-      // Close source dropdown when clicking outside
       if (sourceDropdownRef.current && !sourceDropdownRef.current.contains(event.target as Node)) {
         setSourceDropdownOpen(false);
       }
 
-      // Close more filters when clicking outside
       if (moreFiltersRef.current && !moreFiltersRef.current.contains(event.target as Node)) {
         setMoreFiltersOpen(false);
       }
@@ -219,7 +215,6 @@ function LeadsContent() {
     page?: number;
     view?: ViewMode;
   }) => {
-    // Update state for any provided filters
     if ('search' in newFilters) setSearchTerm(newFilters.search || '');
     if ('stage' in newFilters) setSelectedStage(newFilters.stage);
     if ('source' in newFilters) setSelectedSource(newFilters.source);
@@ -233,7 +228,6 @@ function LeadsContent() {
     if ('page' in newFilters) setCurrentPage(newFilters.page || 1);
     if ('view' in newFilters) setViewMode(newFilters.view || 'table');
 
-    // Update URL with all current filters plus any new ones
     updateUrlParams({
       search: 'search' in newFilters ? newFilters.search : searchTerm,
       stage: 'stage' in newFilters ? newFilters.stage : selectedStage,
@@ -279,12 +273,10 @@ function LeadsContent() {
       if (includeArchived) params.set('includeArchived', 'true');
       if (includeDeleted) params.set('includeDeleted', 'true');
 
-      // Pagination
       const offset = (currentPage - 1) * pageSize;
       params.set('limit', pageSize.toString());
       params.set('offset', offset.toString());
 
-      // Fetch leads with all filters
       const response = await fetch(`/api/leads?${params.toString()}`);
 
       if (!response.ok) {
@@ -293,7 +285,6 @@ function LeadsContent() {
 
       const responseData = await response.json();
 
-      // Handle the response format
       if (responseData.success && responseData.data) {
         setLeads(responseData.data.leads || []);
         setTotalLeads(responseData.data.total || 0);
@@ -324,7 +315,6 @@ function LeadsContent() {
     pageSize
   ]);
 
-  // Initial fetch and refetch when filters change
   useEffect(() => {
     fetchLeads();
   }, [fetchLeads]);
@@ -501,6 +491,14 @@ function LeadsContent() {
               )}
             </AnimatePresence>
           </div>
+          
+          <button
+            onClick={() => setShowExportModal(true)}
+            className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-md flex items-center gap-2 transition-colors shadow-sm"
+          >
+            <FileDown size={16} />
+            <span>Export</span>
+          </button>
 
           <Link
             href="/dashboard/leads/new"
@@ -638,8 +636,8 @@ function LeadsContent() {
               <button
                 onClick={() => setMoreFiltersOpen(prev => !prev)}
                 className={`px-3 py-2 border rounded-md flex items-center gap-2 hover:bg-primary/5 transition-colors ${minConfidence !== undefined || priority !== undefined || region || assignedToId || includeArchived || includeDeleted || selectedTags.length > 0
-                    ? 'border-primary/50 bg-primary/5'
-                    : 'border-input bg-background'
+                  ? 'border-primary/50 bg-primary/5'
+                  : 'border-input bg-background'
                   }`}
                 aria-haspopup="true"
                 aria-expanded={moreFiltersOpen}
@@ -974,7 +972,7 @@ function LeadsContent() {
                     <tr
                       key={lead.id}
                       className={`hover:bg-primary/5 transition-colors group ${lead.isArchived ? 'bg-muted/30 text-muted-foreground' :
-                          lead.isDeleted ? 'bg-destructive/5 text-muted-foreground' : ''
+                        lead.isDeleted ? 'bg-destructive/5 text-muted-foreground' : ''
                         }`}
                     >
                       <td className="px-4 py-3">
@@ -1006,7 +1004,7 @@ function LeadsContent() {
                           <div className="w-16 bg-muted rounded-full h-1.5">
                             <div
                               className={`h-1.5 rounded-full ${(lead.confidence || 0) > 70 ? 'bg-success' :
-                                  (lead.confidence || 0) > 40 ? 'bg-primary' : 'bg-muted-foreground/50'
+                                (lead.confidence || 0) > 40 ? 'bg-primary' : 'bg-muted-foreground/50'
                                 }`}
                               style={{ width: `${lead.confidence || 0}%` }}
                             ></div>
@@ -1112,8 +1110,8 @@ function LeadsContent() {
                           key={page}
                           onClick={() => updateFilters({ page })}
                           className={`w-8 h-8 rounded-md transition-colors ${currentPage === page
-                              ? "bg-primary text-primary-foreground"
-                              : "hover:bg-primary/10"
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-primary/10"
                             }`}
                         >
                           {page}
@@ -1148,7 +1146,18 @@ function LeadsContent() {
           />
         )}
       </motion.div>
-
+      <ExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        leadFilters={{
+          search: searchTerm,
+          stage: selectedStage,
+          source: selectedSource,
+          tags: selectedTags,
+          includeArchived,
+          includeDeleted
+        }}
+      />
       {deleteLeadData && (
         <DeleteLeadConfirmation
           leadId={deleteLeadData.id}

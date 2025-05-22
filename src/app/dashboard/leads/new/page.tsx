@@ -24,11 +24,12 @@ import {
   Calendar,
   Flag,
   ListTodo,
-  Clock
+  Clock,
+  Globe
 } from "lucide-react";
 import { useToast } from "@/components/ui/toast/ToastContext";
-
-type LeadStage = 'NEW' | 'CONTACTED' | 'QUALIFIED' | 'PROPOSAL' | 'NEGOTIATION' | 'CONVERTED' | 'LOST';
+import { LeadStage, LeadSource } from "@/types/lead";
+import { getStageColor, getSourceColor } from "@/utils/styleHelpers";
 
 export default function NewLeadPage() {
   const router = useRouter();
@@ -40,10 +41,14 @@ export default function NewLeadPage() {
     email: '',
     phone: '',
     stage: 'NEW' as LeadStage,
+    source: 'OTHER' as LeadSource,
     tags: [] as string[],
     position: '',
     linkedinUrl: '',
+    region: '',
     score: '',
+    priority: 2,
+    confidence: 50,
     notes: '',
   });
   
@@ -52,7 +57,7 @@ export default function NewLeadPage() {
     title: '',
     description: '',
     dueDate: '',
-    priority: 2, // Default to medium priority
+    priority: 2, 
   });
   
   const [error, setError] = useState<string | null>(null);
@@ -61,12 +66,10 @@ export default function NewLeadPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fix for double scrollbars
     const bodyElement = document.querySelector('body');
     if (bodyElement) {
       bodyElement.style.overflow = 'hidden';
       
-      // Cleanup function to restore original state
       return () => {
         bodyElement.style.overflow = '';
       };
@@ -106,10 +109,11 @@ export default function NewLeadPage() {
       setLoading(true);
       setError(null);
       
-      // Transform data to match expected API format
       const payload = {
         ...formData,
         score: formData.score ? parseInt(formData.score) : undefined,
+        priority: Number(formData.priority),
+        confidence: Number(formData.confidence),
       };
       
       const response = await fetch('/api/leads', {
@@ -127,10 +131,8 @@ export default function NewLeadPage() {
       
       const data = await response.json();
       
-      // Get the ID of the newly created lead
       const leadId = data.success && data.data ? data.data.id : data.id;
       
-      // If task data is provided and includeTask is true, create a task
       if (includeTask && taskData.title && leadId) {
         const taskPayload = {
           ...taskData,
@@ -175,9 +177,7 @@ export default function NewLeadPage() {
         duration: 3000
       });
       
-      // Navigate after a brief delay to show success message
       setTimeout(() => {
-        // Navigate to the lead detail page if we have an ID, otherwise to leads list
         if (leadId) {
           router.push(`/dashboard/leads/${leadId}`);
         } else {
@@ -198,28 +198,7 @@ export default function NewLeadPage() {
       setLoading(false);
     }
   };
-  
-  // Get stage color for visual differentiation
-  const getStageColor = (stage: LeadStage) => {
-    switch (stage) {
-      case 'NEW':
-        return 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'CONTACTED':
-        return 'text-purple-600 bg-purple-50 border-purple-200';
-      case 'QUALIFIED':
-        return 'text-cyan-600 bg-cyan-50 border-cyan-200';
-      case 'PROPOSAL':
-        return 'text-amber-600 bg-amber-50 border-amber-200';
-      case 'NEGOTIATION':
-        return 'text-orange-600 bg-orange-50 border-orange-200';
-      case 'CONVERTED':
-        return 'text-green-600 bg-green-50 border-green-200';
-      case 'LOST':
-        return 'text-red-600 bg-red-50 border-red-200';
-      default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-  };
+
   
   return (
     <motion.div
@@ -454,6 +433,26 @@ export default function NewLeadPage() {
                     />
                   </div>
                 </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="region" className="block text-sm font-medium">
+                    Region/Location
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Globe size={16} className="text-muted-foreground" />
+                    </div>
+                    <input
+                      id="region"
+                      name="region"
+                      type="text"
+                      value={formData.region}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-2.5 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                      placeholder="North America, Europe, APAC, etc."
+                    />
+                  </div>
+                </div>
               </div>
               
               <div className="pt-2">
@@ -587,9 +586,7 @@ export default function NewLeadPage() {
           </div>
         </div>
         
-        {/* Right sidebar */}
         <div className="space-y-6">
-          {/* Lead Stage Card */}
           <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-6 py-4 border-b border-border">
               <h2 className="font-medium text-lg flex items-center gap-2">
@@ -599,7 +596,34 @@ export default function NewLeadPage() {
             </div>
             
             <div className="p-6 space-y-4">
+              {/* Source */}
               <div className="space-y-2">
+                <label htmlFor="source" className="block text-sm font-medium">
+                  Lead Source
+                </label>
+                <select
+                  id="source"
+                  name="source"
+                  value={formData.source}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2.5 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                >
+                  {(['LINKEDIN', 'COLD_EMAIL', 'WEBSITE', 'REFERRAL', 'CONFERENCE', 'WEBINAR', 'INBOUND_CALL', 'OUTBOUND_CALL', 'SOCIAL_MEDIA', 'PARTNER', 'OTHER'] as LeadSource[]).map(source => (
+                    <option key={source} value={source}>
+                      {source.replace('_', ' ').charAt(0) + source.replace('_', ' ').slice(1).toLowerCase()}
+                    </option>
+                  ))}
+                </select>
+                
+                <div className="mt-3 flex items-center justify-center">
+                  <span className={`inline-block px-4 py-1.5 text-sm font-medium rounded-full border ${getSourceColor(formData.source)}`}>
+                    {formData.source.replace('_', ' ').charAt(0) + formData.source.replace('_', ' ').slice(1).toLowerCase()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Stage */}
+              <div className="space-y-2 pt-4">
                 <label htmlFor="stage" className="block text-sm font-medium">
                   Current Stage
                 </label>
@@ -624,9 +648,10 @@ export default function NewLeadPage() {
                 </div>
               </div>
               
-              <div className="space-y-2 pt-2">
-                <label htmlFor="score" className="block text-sm font-medium flex items-center justify-between">
-                  <span>Lead Score</span>
+              {/* Confidence score */}
+              <div className="space-y-2 pt-4">
+                <label htmlFor="confidence" className="block text-sm font-medium flex items-center justify-between">
+                  <span>Confidence Score</span>
                   <span className="text-xs text-muted-foreground">(1-100)</span>
                 </label>
                 <div className="relative">
@@ -634,27 +659,52 @@ export default function NewLeadPage() {
                     <BarChart size={16} className="text-muted-foreground" />
                   </div>
                   <input
-                    id="score"
-                    name="score"
+                    id="confidence"
+                    name="confidence"
                     type="number"
                     min="1"
                     max="100"
-                    value={formData.score}
+                    value={formData.confidence}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-2.5 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    placeholder="50"
                   />
                 </div>
                 
-                {formData.score && (
-                  <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${
-                        parseInt(formData.score) >= 70 ? 'bg-green-500' : 
-                        parseInt(formData.score) >= 40 ? 'bg-amber-500' : 'bg-red-500'
-                      }`}
-                      style={{ width: `${Math.min(parseInt(formData.score) || 0, 100)}%` }}
-                    />
+                <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full ${
+                      parseInt(String(formData.confidence)) >= 70 ? 'bg-green-500' : 
+                      parseInt(String(formData.confidence)) >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                    }`}
+                    style={{ width: `${Math.min(parseInt(String(formData.confidence)) || 0, 100)}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Priority */}
+              <div className="space-y-2 pt-4">
+                <label htmlFor="priority" className="block text-sm font-medium">
+                  Priority (1-5)
+                </label>
+                <select
+                  id="priority"
+                  name="priority"
+                  value={formData.priority}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2.5 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                >
+                  <option value="1">1 - Very Low</option>
+                  <option value="2">2 - Low</option>
+                  <option value="3">3 - Medium</option>
+                  <option value="4">4 - High</option>
+                  <option value="5">5 - Very High</option>
+                </select>
+
+             
+
+                {formData.priority >= 3 && (
+                  <div className="mt-2 text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+                    Note: High-priority leads will automatically create follow-up tasks
                   </div>
                 )}
               </div>

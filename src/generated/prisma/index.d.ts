@@ -184,6 +184,23 @@ export const JobStatus: {
 
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
 
+
+export const LeadSource: {
+  LINKEDIN: 'LINKEDIN',
+  COLD_EMAIL: 'COLD_EMAIL',
+  WEBSITE: 'WEBSITE',
+  REFERRAL: 'REFERRAL',
+  CONFERENCE: 'CONFERENCE',
+  WEBINAR: 'WEBINAR',
+  INBOUND_CALL: 'INBOUND_CALL',
+  OUTBOUND_CALL: 'OUTBOUND_CALL',
+  SOCIAL_MEDIA: 'SOCIAL_MEDIA',
+  PARTNER: 'PARTNER',
+  OTHER: 'OTHER'
+};
+
+export type LeadSource = (typeof LeadSource)[keyof typeof LeadSource]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -225,6 +242,10 @@ export const ExportType: typeof $Enums.ExportType
 export type JobStatus = $Enums.JobStatus
 
 export const JobStatus: typeof $Enums.JobStatus
+
+export type LeadSource = $Enums.LeadSource
+
+export const LeadSource: typeof $Enums.LeadSource
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1977,16 +1998,20 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     leads: number
+    assignedLeads: number
     notifications: number
     campaigns: number
     templates: number
+    tasks: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     leads?: boolean | UserCountOutputTypeCountLeadsArgs
+    assignedLeads?: boolean | UserCountOutputTypeCountAssignedLeadsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     campaigns?: boolean | UserCountOutputTypeCountCampaignsArgs
     templates?: boolean | UserCountOutputTypeCountTemplatesArgs
+    tasks?: boolean | UserCountOutputTypeCountTasksArgs
   }
 
   // Custom InputTypes
@@ -2010,6 +2035,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountAssignedLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationWhereInput
   }
@@ -2026,6 +2058,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageTemplateWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
   }
 
 
@@ -3279,9 +3318,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     leads?: boolean | User$leadsArgs<ExtArgs>
+    assignedLeads?: boolean | User$assignedLeadsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     campaigns?: boolean | User$campaignsArgs<ExtArgs>
     templates?: boolean | User$templatesArgs<ExtArgs>
+    tasks?: boolean | User$tasksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3301,9 +3342,11 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "password" | "role" | "preferences" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     leads?: boolean | User$leadsArgs<ExtArgs>
+    assignedLeads?: boolean | User$assignedLeadsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     campaigns?: boolean | User$campaignsArgs<ExtArgs>
     templates?: boolean | User$templatesArgs<ExtArgs>
+    tasks?: boolean | User$tasksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3311,9 +3354,11 @@ export namespace Prisma {
     name: "User"
     objects: {
       leads: Prisma.$LeadPayload<ExtArgs>[]
+      assignedLeads: Prisma.$LeadPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       campaigns: Prisma.$CampaignPayload<ExtArgs>[]
       templates: Prisma.$MessageTemplatePayload<ExtArgs>[]
+      tasks: Prisma.$TaskPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3688,9 +3733,11 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     leads<T extends User$leadsArgs<ExtArgs> = {}>(args?: Subset<T, User$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedLeads<T extends User$assignedLeadsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     campaigns<T extends User$campaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     templates<T extends User$templatesArgs<ExtArgs> = {}>(args?: Subset<T, User$templatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tasks<T extends User$tasksArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4122,6 +4169,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.assignedLeads
+   */
+  export type User$assignedLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Lead
+     */
+    omit?: LeadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    where?: LeadWhereInput
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    cursor?: LeadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
    * User.notifications
    */
   export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4194,6 +4265,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.tasks
+   */
+  export type User$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4225,10 +4320,14 @@ export namespace Prisma {
   }
 
   export type LeadAvgAggregateOutputType = {
+    confidence: number | null
+    priority: number | null
     score: number | null
   }
 
   export type LeadSumAggregateOutputType = {
+    confidence: number | null
+    priority: number | null
     score: number | null
   }
 
@@ -4242,9 +4341,17 @@ export namespace Prisma {
     position: string | null
     notes: string | null
     stage: $Enums.LeadStage | null
+    source: $Enums.LeadSource | null
+    confidence: number | null
+    priority: number | null
+    isArchived: boolean | null
+    isDeleted: boolean | null
     score: number | null
     userId: string | null
+    assignedToId: string | null
     campaignId: string | null
+    timezone: string | null
+    region: string | null
     lastActivity: Date | null
     lastContactedDate: Date | null
     nextContactDate: Date | null
@@ -4262,9 +4369,17 @@ export namespace Prisma {
     position: string | null
     notes: string | null
     stage: $Enums.LeadStage | null
+    source: $Enums.LeadSource | null
+    confidence: number | null
+    priority: number | null
+    isArchived: boolean | null
+    isDeleted: boolean | null
     score: number | null
     userId: string | null
+    assignedToId: string | null
     campaignId: string | null
+    timezone: string | null
+    region: string | null
     lastActivity: Date | null
     lastContactedDate: Date | null
     nextContactDate: Date | null
@@ -4282,10 +4397,19 @@ export namespace Prisma {
     position: number
     notes: number
     stage: number
+    source: number
+    confidence: number
+    priority: number
+    isArchived: number
+    isDeleted: number
     tags: number
     score: number
     userId: number
+    assignedToId: number
     campaignId: number
+    timezone: number
+    region: number
+    address: number
     lastActivity: number
     lastContactedDate: number
     nextContactDate: number
@@ -4296,10 +4420,14 @@ export namespace Prisma {
 
 
   export type LeadAvgAggregateInputType = {
+    confidence?: true
+    priority?: true
     score?: true
   }
 
   export type LeadSumAggregateInputType = {
+    confidence?: true
+    priority?: true
     score?: true
   }
 
@@ -4313,9 +4441,17 @@ export namespace Prisma {
     position?: true
     notes?: true
     stage?: true
+    source?: true
+    confidence?: true
+    priority?: true
+    isArchived?: true
+    isDeleted?: true
     score?: true
     userId?: true
+    assignedToId?: true
     campaignId?: true
+    timezone?: true
+    region?: true
     lastActivity?: true
     lastContactedDate?: true
     nextContactDate?: true
@@ -4333,9 +4469,17 @@ export namespace Prisma {
     position?: true
     notes?: true
     stage?: true
+    source?: true
+    confidence?: true
+    priority?: true
+    isArchived?: true
+    isDeleted?: true
     score?: true
     userId?: true
+    assignedToId?: true
     campaignId?: true
+    timezone?: true
+    region?: true
     lastActivity?: true
     lastContactedDate?: true
     nextContactDate?: true
@@ -4353,10 +4497,19 @@ export namespace Prisma {
     position?: true
     notes?: true
     stage?: true
+    source?: true
+    confidence?: true
+    priority?: true
+    isArchived?: true
+    isDeleted?: true
     tags?: true
     score?: true
     userId?: true
+    assignedToId?: true
     campaignId?: true
+    timezone?: true
+    region?: true
+    address?: true
     lastActivity?: true
     lastContactedDate?: true
     nextContactDate?: true
@@ -4461,10 +4614,19 @@ export namespace Prisma {
     position: string | null
     notes: string | null
     stage: $Enums.LeadStage
+    source: $Enums.LeadSource | null
+    confidence: number | null
+    priority: number
+    isArchived: boolean
+    isDeleted: boolean
     tags: string[]
     score: number | null
     userId: string | null
+    assignedToId: string | null
     campaignId: string | null
+    timezone: string | null
+    region: string | null
+    address: JsonValue | null
     lastActivity: Date | null
     lastContactedDate: Date | null
     nextContactDate: Date | null
@@ -4501,16 +4663,26 @@ export namespace Prisma {
     position?: boolean
     notes?: boolean
     stage?: boolean
+    source?: boolean
+    confidence?: boolean
+    priority?: boolean
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: boolean
     score?: boolean
     userId?: boolean
+    assignedToId?: boolean
     campaignId?: boolean
+    timezone?: boolean
+    region?: boolean
+    address?: boolean
     lastActivity?: boolean
     lastContactedDate?: boolean
     nextContactDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Lead$userArgs<ExtArgs>
+    assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
     campaign?: boolean | Lead$campaignArgs<ExtArgs>
     conversations?: boolean | Lead$conversationsArgs<ExtArgs>
     suggestions?: boolean | Lead$suggestionsArgs<ExtArgs>
@@ -4530,10 +4702,19 @@ export namespace Prisma {
     position?: boolean
     notes?: boolean
     stage?: boolean
+    source?: boolean
+    confidence?: boolean
+    priority?: boolean
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: boolean
     score?: boolean
     userId?: boolean
+    assignedToId?: boolean
     campaignId?: boolean
+    timezone?: boolean
+    region?: boolean
+    address?: boolean
     lastActivity?: boolean
     lastContactedDate?: boolean
     nextContactDate?: boolean
@@ -4541,9 +4722,10 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "linkedinUrl" | "company" | "position" | "notes" | "stage" | "tags" | "score" | "userId" | "campaignId" | "lastActivity" | "lastContactedDate" | "nextContactDate" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "linkedinUrl" | "company" | "position" | "notes" | "stage" | "source" | "confidence" | "priority" | "isArchived" | "isDeleted" | "tags" | "score" | "userId" | "assignedToId" | "campaignId" | "timezone" | "region" | "address" | "lastActivity" | "lastContactedDate" | "nextContactDate" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Lead$userArgs<ExtArgs>
+    assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
     campaign?: boolean | Lead$campaignArgs<ExtArgs>
     conversations?: boolean | Lead$conversationsArgs<ExtArgs>
     suggestions?: boolean | Lead$suggestionsArgs<ExtArgs>
@@ -4555,6 +4737,7 @@ export namespace Prisma {
     name: "Lead"
     objects: {
       user: Prisma.$UserPayload<ExtArgs> | null
+      assignedTo: Prisma.$UserPayload<ExtArgs> | null
       campaign: Prisma.$CampaignPayload<ExtArgs> | null
       conversations: Prisma.$ConversationPayload<ExtArgs>[]
       suggestions: Prisma.$AiSuggestionPayload<ExtArgs>[]
@@ -4570,10 +4753,19 @@ export namespace Prisma {
       position: string | null
       notes: string | null
       stage: $Enums.LeadStage
+      source: $Enums.LeadSource | null
+      confidence: number | null
+      priority: number
+      isArchived: boolean
+      isDeleted: boolean
       tags: string[]
       score: number | null
       userId: string | null
+      assignedToId: string | null
       campaignId: string | null
+      timezone: string | null
+      region: string | null
+      address: Prisma.JsonValue | null
       lastActivity: Date | null
       lastContactedDate: Date | null
       nextContactDate: Date | null
@@ -4943,6 +5135,7 @@ export namespace Prisma {
   export interface Prisma__LeadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends Lead$userArgs<ExtArgs> = {}>(args?: Subset<T, Lead$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignedTo<T extends Lead$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Lead$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     campaign<T extends Lead$campaignArgs<ExtArgs> = {}>(args?: Subset<T, Lead$campaignArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     conversations<T extends Lead$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     suggestions<T extends Lead$suggestionsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$suggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4985,10 +5178,19 @@ export namespace Prisma {
     readonly position: FieldRef<"Lead", 'String'>
     readonly notes: FieldRef<"Lead", 'String'>
     readonly stage: FieldRef<"Lead", 'LeadStage'>
+    readonly source: FieldRef<"Lead", 'LeadSource'>
+    readonly confidence: FieldRef<"Lead", 'Int'>
+    readonly priority: FieldRef<"Lead", 'Int'>
+    readonly isArchived: FieldRef<"Lead", 'Boolean'>
+    readonly isDeleted: FieldRef<"Lead", 'Boolean'>
     readonly tags: FieldRef<"Lead", 'String[]'>
     readonly score: FieldRef<"Lead", 'Int'>
     readonly userId: FieldRef<"Lead", 'String'>
+    readonly assignedToId: FieldRef<"Lead", 'String'>
     readonly campaignId: FieldRef<"Lead", 'String'>
+    readonly timezone: FieldRef<"Lead", 'String'>
+    readonly region: FieldRef<"Lead", 'String'>
+    readonly address: FieldRef<"Lead", 'Json'>
     readonly lastActivity: FieldRef<"Lead", 'DateTime'>
     readonly lastContactedDate: FieldRef<"Lead", 'DateTime'>
     readonly nextContactDate: FieldRef<"Lead", 'DateTime'>
@@ -5367,6 +5569,25 @@ export namespace Prisma {
    * Lead.user
    */
   export type Lead$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Lead.assignedTo
+   */
+  export type Lead$assignedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -6583,12 +6804,13 @@ export namespace Prisma {
     id: string | null
     leadId: string | null
     suggestion: string | null
+    reasoning: string | null
     type: string | null
     status: $Enums.SuggestionStatus | null
     priority: number | null
+    context: string | null
     done: boolean | null
     isViewed: boolean | null
-    reasoning: string | null
     templateId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6598,12 +6820,13 @@ export namespace Prisma {
     id: string | null
     leadId: string | null
     suggestion: string | null
+    reasoning: string | null
     type: string | null
     status: $Enums.SuggestionStatus | null
     priority: number | null
+    context: string | null
     done: boolean | null
     isViewed: boolean | null
-    reasoning: string | null
     templateId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6613,12 +6836,13 @@ export namespace Prisma {
     id: number
     leadId: number
     suggestion: number
+    reasoning: number
     type: number
     status: number
     priority: number
+    context: number
     done: number
     isViewed: number
-    reasoning: number
     templateId: number
     createdAt: number
     updatedAt: number
@@ -6638,12 +6862,13 @@ export namespace Prisma {
     id?: true
     leadId?: true
     suggestion?: true
+    reasoning?: true
     type?: true
     status?: true
     priority?: true
+    context?: true
     done?: true
     isViewed?: true
-    reasoning?: true
     templateId?: true
     createdAt?: true
     updatedAt?: true
@@ -6653,12 +6878,13 @@ export namespace Prisma {
     id?: true
     leadId?: true
     suggestion?: true
+    reasoning?: true
     type?: true
     status?: true
     priority?: true
+    context?: true
     done?: true
     isViewed?: true
-    reasoning?: true
     templateId?: true
     createdAt?: true
     updatedAt?: true
@@ -6668,12 +6894,13 @@ export namespace Prisma {
     id?: true
     leadId?: true
     suggestion?: true
+    reasoning?: true
     type?: true
     status?: true
     priority?: true
+    context?: true
     done?: true
     isViewed?: true
-    reasoning?: true
     templateId?: true
     createdAt?: true
     updatedAt?: true
@@ -6770,12 +6997,13 @@ export namespace Prisma {
     id: string
     leadId: string
     suggestion: string
+    reasoning: string | null
     type: string
     status: $Enums.SuggestionStatus
     priority: number
+    context: string | null
     done: boolean
     isViewed: boolean
-    reasoning: string | null
     templateId: string | null
     createdAt: Date
     updatedAt: Date
@@ -6804,12 +7032,13 @@ export namespace Prisma {
     id?: boolean
     leadId?: boolean
     suggestion?: boolean
+    reasoning?: boolean
     type?: boolean
     status?: boolean
     priority?: boolean
+    context?: boolean
     done?: boolean
     isViewed?: boolean
-    reasoning?: boolean
     templateId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6823,18 +7052,19 @@ export namespace Prisma {
     id?: boolean
     leadId?: boolean
     suggestion?: boolean
+    reasoning?: boolean
     type?: boolean
     status?: boolean
     priority?: boolean
+    context?: boolean
     done?: boolean
     isViewed?: boolean
-    reasoning?: boolean
     templateId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AiSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leadId" | "suggestion" | "type" | "status" | "priority" | "done" | "isViewed" | "reasoning" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["aiSuggestion"]>
+  export type AiSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leadId" | "suggestion" | "reasoning" | "type" | "status" | "priority" | "context" | "done" | "isViewed" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["aiSuggestion"]>
   export type AiSuggestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     template?: boolean | AiSuggestion$templateArgs<ExtArgs>
@@ -6850,12 +7080,13 @@ export namespace Prisma {
       id: string
       leadId: string
       suggestion: string
+      reasoning: string | null
       type: string
       status: $Enums.SuggestionStatus
       priority: number
+      context: string | null
       done: boolean
       isViewed: boolean
-      reasoning: string | null
       templateId: string | null
       createdAt: Date
       updatedAt: Date
@@ -7256,12 +7487,13 @@ export namespace Prisma {
     readonly id: FieldRef<"AiSuggestion", 'String'>
     readonly leadId: FieldRef<"AiSuggestion", 'String'>
     readonly suggestion: FieldRef<"AiSuggestion", 'String'>
+    readonly reasoning: FieldRef<"AiSuggestion", 'String'>
     readonly type: FieldRef<"AiSuggestion", 'String'>
     readonly status: FieldRef<"AiSuggestion", 'SuggestionStatus'>
     readonly priority: FieldRef<"AiSuggestion", 'Int'>
+    readonly context: FieldRef<"AiSuggestion", 'String'>
     readonly done: FieldRef<"AiSuggestion", 'Boolean'>
     readonly isViewed: FieldRef<"AiSuggestion", 'Boolean'>
-    readonly reasoning: FieldRef<"AiSuggestion", 'String'>
     readonly templateId: FieldRef<"AiSuggestion", 'String'>
     readonly createdAt: FieldRef<"AiSuggestion", 'DateTime'>
     readonly updatedAt: FieldRef<"AiSuggestion", 'DateTime'>
@@ -11933,6 +12165,7 @@ export namespace Prisma {
     priority: number | null
     status: $Enums.TaskStatus | null
     leadId: string | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11945,6 +12178,7 @@ export namespace Prisma {
     priority: number | null
     status: $Enums.TaskStatus | null
     leadId: string | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11957,6 +12191,7 @@ export namespace Prisma {
     priority: number
     status: number
     leadId: number
+    userId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11979,6 +12214,7 @@ export namespace Prisma {
     priority?: true
     status?: true
     leadId?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11991,6 +12227,7 @@ export namespace Prisma {
     priority?: true
     status?: true
     leadId?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12003,6 +12240,7 @@ export namespace Prisma {
     priority?: true
     status?: true
     leadId?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -12102,6 +12340,7 @@ export namespace Prisma {
     priority: number
     status: $Enums.TaskStatus
     leadId: string | null
+    userId: string | null
     createdAt: Date
     updatedAt: Date
     _count: TaskCountAggregateOutputType | null
@@ -12133,9 +12372,11 @@ export namespace Prisma {
     priority?: boolean
     status?: boolean
     leadId?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lead?: boolean | Task$leadArgs<ExtArgs>
+    user?: boolean | Task$userArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
 
@@ -12148,19 +12389,22 @@ export namespace Prisma {
     priority?: boolean
     status?: boolean
     leadId?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "dueDate" | "priority" | "status" | "leadId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "dueDate" | "priority" | "status" | "leadId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | Task$leadArgs<ExtArgs>
+    user?: boolean | Task$userArgs<ExtArgs>
   }
 
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Task"
     objects: {
       lead: Prisma.$LeadPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12170,6 +12414,7 @@ export namespace Prisma {
       priority: number
       status: $Enums.TaskStatus
       leadId: string | null
+      userId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["task"]>
@@ -12536,6 +12781,7 @@ export namespace Prisma {
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     lead<T extends Task$leadArgs<ExtArgs> = {}>(args?: Subset<T, Task$leadArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends Task$userArgs<ExtArgs> = {}>(args?: Subset<T, Task$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12572,6 +12818,7 @@ export namespace Prisma {
     readonly priority: FieldRef<"Task", 'Int'>
     readonly status: FieldRef<"Task", 'TaskStatus'>
     readonly leadId: FieldRef<"Task", 'String'>
+    readonly userId: FieldRef<"Task", 'String'>
     readonly createdAt: FieldRef<"Task", 'DateTime'>
     readonly updatedAt: FieldRef<"Task", 'DateTime'>
   }
@@ -12960,6 +13207,25 @@ export namespace Prisma {
      */
     include?: LeadInclude<ExtArgs> | null
     where?: LeadWhereInput
+  }
+
+  /**
+   * Task.user
+   */
+  export type Task$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -15004,10 +15270,19 @@ export namespace Prisma {
     position: 'position',
     notes: 'notes',
     stage: 'stage',
+    source: 'source',
+    confidence: 'confidence',
+    priority: 'priority',
+    isArchived: 'isArchived',
+    isDeleted: 'isDeleted',
     tags: 'tags',
     score: 'score',
     userId: 'userId',
+    assignedToId: 'assignedToId',
     campaignId: 'campaignId',
+    timezone: 'timezone',
+    region: 'region',
+    address: 'address',
     lastActivity: 'lastActivity',
     lastContactedDate: 'lastContactedDate',
     nextContactDate: 'nextContactDate',
@@ -15041,12 +15316,13 @@ export namespace Prisma {
     id: 'id',
     leadId: 'leadId',
     suggestion: 'suggestion',
+    reasoning: 'reasoning',
     type: 'type',
     status: 'status',
     priority: 'priority',
+    context: 'context',
     done: 'done',
     isViewed: 'isViewed',
-    reasoning: 'reasoning',
     templateId: 'templateId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -15122,6 +15398,7 @@ export namespace Prisma {
     priority: 'priority',
     status: 'status',
     leadId: 'leadId',
+    userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15243,6 +15520,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'LeadSource'
+   */
+  export type EnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeadSource[]'
+   */
+  export type ListEnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -15257,6 +15548,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'ConversationType'
    */
   export type EnumConversationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationType'>
@@ -15267,13 +15565,6 @@ export namespace Prisma {
    * Reference to a field of type 'ConversationType[]'
    */
   export type ListEnumConversationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -15457,9 +15748,11 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     leads?: LeadListRelationFilter
+    assignedLeads?: LeadListRelationFilter
     notifications?: NotificationListRelationFilter
     campaigns?: CampaignListRelationFilter
     templates?: MessageTemplateListRelationFilter
+    tasks?: TaskListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15472,9 +15765,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     leads?: LeadOrderByRelationAggregateInput
+    assignedLeads?: LeadOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     campaigns?: CampaignOrderByRelationAggregateInput
     templates?: MessageTemplateOrderByRelationAggregateInput
+    tasks?: TaskOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -15490,9 +15785,11 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     leads?: LeadListRelationFilter
+    assignedLeads?: LeadListRelationFilter
     notifications?: NotificationListRelationFilter
     campaigns?: CampaignListRelationFilter
     templates?: MessageTemplateListRelationFilter
+    tasks?: TaskListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -15536,16 +15833,26 @@ export namespace Prisma {
     position?: StringNullableFilter<"Lead"> | string | null
     notes?: StringNullableFilter<"Lead"> | string | null
     stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
+    source?: EnumLeadSourceNullableFilter<"Lead"> | $Enums.LeadSource | null
+    confidence?: IntNullableFilter<"Lead"> | number | null
+    priority?: IntFilter<"Lead"> | number
+    isArchived?: BoolFilter<"Lead"> | boolean
+    isDeleted?: BoolFilter<"Lead"> | boolean
     tags?: StringNullableListFilter<"Lead">
     score?: IntNullableFilter<"Lead"> | number | null
     userId?: StringNullableFilter<"Lead"> | string | null
+    assignedToId?: StringNullableFilter<"Lead"> | string | null
     campaignId?: StringNullableFilter<"Lead"> | string | null
+    timezone?: StringNullableFilter<"Lead"> | string | null
+    region?: StringNullableFilter<"Lead"> | string | null
+    address?: JsonNullableFilter<"Lead">
     lastActivity?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lastContactedDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
     nextContactDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     campaign?: XOR<CampaignNullableScalarRelationFilter, CampaignWhereInput> | null
     conversations?: ConversationListRelationFilter
     suggestions?: AiSuggestionListRelationFilter
@@ -15562,16 +15869,26 @@ export namespace Prisma {
     position?: SortOrder
     notes?: SortOrder
     stage?: SortOrder
+    source?: SortOrder
+    confidence?: SortOrder
+    priority?: SortOrder
+    isArchived?: SortOrder
+    isDeleted?: SortOrder
     tags?: SortOrder
     score?: SortOrder
     userId?: SortOrder
+    assignedToId?: SortOrder
     campaignId?: SortOrder
+    timezone?: SortOrder
+    region?: SortOrder
+    address?: SortOrder
     lastActivity?: SortOrder
     lastContactedDate?: SortOrder
     nextContactDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    assignedTo?: UserOrderByWithRelationInput
     campaign?: CampaignOrderByWithRelationInput
     conversations?: ConversationOrderByRelationAggregateInput
     suggestions?: AiSuggestionOrderByRelationAggregateInput
@@ -15591,16 +15908,26 @@ export namespace Prisma {
     position?: StringNullableFilter<"Lead"> | string | null
     notes?: StringNullableFilter<"Lead"> | string | null
     stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
+    source?: EnumLeadSourceNullableFilter<"Lead"> | $Enums.LeadSource | null
+    confidence?: IntNullableFilter<"Lead"> | number | null
+    priority?: IntFilter<"Lead"> | number
+    isArchived?: BoolFilter<"Lead"> | boolean
+    isDeleted?: BoolFilter<"Lead"> | boolean
     tags?: StringNullableListFilter<"Lead">
     score?: IntNullableFilter<"Lead"> | number | null
     userId?: StringNullableFilter<"Lead"> | string | null
+    assignedToId?: StringNullableFilter<"Lead"> | string | null
     campaignId?: StringNullableFilter<"Lead"> | string | null
+    timezone?: StringNullableFilter<"Lead"> | string | null
+    region?: StringNullableFilter<"Lead"> | string | null
+    address?: JsonNullableFilter<"Lead">
     lastActivity?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lastContactedDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
     nextContactDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     campaign?: XOR<CampaignNullableScalarRelationFilter, CampaignWhereInput> | null
     conversations?: ConversationListRelationFilter
     suggestions?: AiSuggestionListRelationFilter
@@ -15617,10 +15944,19 @@ export namespace Prisma {
     position?: SortOrder
     notes?: SortOrder
     stage?: SortOrder
+    source?: SortOrder
+    confidence?: SortOrder
+    priority?: SortOrder
+    isArchived?: SortOrder
+    isDeleted?: SortOrder
     tags?: SortOrder
     score?: SortOrder
     userId?: SortOrder
+    assignedToId?: SortOrder
     campaignId?: SortOrder
+    timezone?: SortOrder
+    region?: SortOrder
+    address?: SortOrder
     lastActivity?: SortOrder
     lastContactedDate?: SortOrder
     nextContactDate?: SortOrder
@@ -15646,10 +15982,19 @@ export namespace Prisma {
     position?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     stage?: EnumLeadStageWithAggregatesFilter<"Lead"> | $Enums.LeadStage
+    source?: EnumLeadSourceNullableWithAggregatesFilter<"Lead"> | $Enums.LeadSource | null
+    confidence?: IntNullableWithAggregatesFilter<"Lead"> | number | null
+    priority?: IntWithAggregatesFilter<"Lead"> | number
+    isArchived?: BoolWithAggregatesFilter<"Lead"> | boolean
+    isDeleted?: BoolWithAggregatesFilter<"Lead"> | boolean
     tags?: StringNullableListFilter<"Lead">
     score?: IntNullableWithAggregatesFilter<"Lead"> | number | null
     userId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    assignedToId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     campaignId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    timezone?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    region?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    address?: JsonNullableWithAggregatesFilter<"Lead">
     lastActivity?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     lastContactedDate?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     nextContactDate?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
@@ -15759,12 +16104,13 @@ export namespace Prisma {
     id?: StringFilter<"AiSuggestion"> | string
     leadId?: StringFilter<"AiSuggestion"> | string
     suggestion?: StringFilter<"AiSuggestion"> | string
+    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     type?: StringFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntFilter<"AiSuggestion"> | number
+    context?: StringNullableFilter<"AiSuggestion"> | string | null
     done?: BoolFilter<"AiSuggestion"> | boolean
     isViewed?: BoolFilter<"AiSuggestion"> | boolean
-    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeFilter<"AiSuggestion"> | Date | string
@@ -15776,12 +16122,13 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
+    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
+    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
-    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15796,12 +16143,13 @@ export namespace Prisma {
     NOT?: AiSuggestionWhereInput | AiSuggestionWhereInput[]
     leadId?: StringFilter<"AiSuggestion"> | string
     suggestion?: StringFilter<"AiSuggestion"> | string
+    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     type?: StringFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntFilter<"AiSuggestion"> | number
+    context?: StringNullableFilter<"AiSuggestion"> | string | null
     done?: BoolFilter<"AiSuggestion"> | boolean
     isViewed?: BoolFilter<"AiSuggestion"> | boolean
-    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeFilter<"AiSuggestion"> | Date | string
@@ -15813,12 +16161,13 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
+    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
+    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
-    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15836,12 +16185,13 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"AiSuggestion"> | string
     leadId?: StringWithAggregatesFilter<"AiSuggestion"> | string
     suggestion?: StringWithAggregatesFilter<"AiSuggestion"> | string
+    reasoning?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     type?: StringWithAggregatesFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusWithAggregatesFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntWithAggregatesFilter<"AiSuggestion"> | number
+    context?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     done?: BoolWithAggregatesFilter<"AiSuggestion"> | boolean
     isViewed?: BoolWithAggregatesFilter<"AiSuggestion"> | boolean
-    reasoning?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AiSuggestion"> | Date | string
@@ -16167,9 +16517,11 @@ export namespace Prisma {
     priority?: IntFilter<"Task"> | number
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     leadId?: StringNullableFilter<"Task"> | string | null
+    userId?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     lead?: XOR<LeadNullableScalarRelationFilter, LeadWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type TaskOrderByWithRelationInput = {
@@ -16180,9 +16532,11 @@ export namespace Prisma {
     priority?: SortOrder
     status?: SortOrder
     leadId?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lead?: LeadOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -16196,9 +16550,11 @@ export namespace Prisma {
     priority?: IntFilter<"Task"> | number
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     leadId?: StringNullableFilter<"Task"> | string | null
+    userId?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     lead?: XOR<LeadNullableScalarRelationFilter, LeadWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
@@ -16209,6 +16565,7 @@ export namespace Prisma {
     priority?: SortOrder
     status?: SortOrder
     leadId?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TaskCountOrderByAggregateInput
@@ -16229,6 +16586,7 @@ export namespace Prisma {
     priority?: IntWithAggregatesFilter<"Task"> | number
     status?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
     leadId?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"Task"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
   }
@@ -16437,9 +16795,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     campaigns?: CampaignCreateNestedManyWithoutUserInput
     templates?: MessageTemplateCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -16452,9 +16812,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadUncheckedCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadUncheckedCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     campaigns?: CampaignUncheckedCreateNestedManyWithoutUserInput
     templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -16466,9 +16828,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     campaigns?: CampaignUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -16480,9 +16844,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUncheckedUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     campaigns?: CampaignUncheckedUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -16526,14 +16892,23 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutLeadsInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     campaign?: CampaignCreateNestedOneWithoutLeadsInput
     conversations?: ConversationCreateNestedManyWithoutLeadInput
     suggestions?: AiSuggestionCreateNestedManyWithoutLeadInput
@@ -16550,10 +16925,19 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -16573,14 +16957,23 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutLeadsNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     campaign?: CampaignUpdateOneWithoutLeadsNestedInput
     conversations?: ConversationUpdateManyWithoutLeadNestedInput
     suggestions?: AiSuggestionUpdateManyWithoutLeadNestedInput
@@ -16596,10 +16989,19 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16620,10 +17022,19 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -16640,8 +17051,16 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16658,10 +17077,19 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16779,12 +17207,13 @@ export namespace Prisma {
   export type AiSuggestionCreateInput = {
     id?: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutSuggestionsInput
@@ -16795,12 +17224,13 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16808,12 +17238,13 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutSuggestionsNestedInput
@@ -16823,12 +17254,13 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16838,12 +17270,13 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16851,12 +17284,13 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateManyMutationInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16864,12 +17298,13 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateManyInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17210,6 +17645,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lead?: LeadCreateNestedOneWithoutTasksInput
+    user?: UserCreateNestedOneWithoutTasksInput
   }
 
   export type TaskUncheckedCreateInput = {
@@ -17220,6 +17656,7 @@ export namespace Prisma {
     priority?: number
     status?: $Enums.TaskStatus
     leadId?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17233,6 +17670,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneWithoutTasksNestedInput
+    user?: UserUpdateOneWithoutTasksNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
@@ -17242,6 +17680,7 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     leadId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17254,6 +17693,7 @@ export namespace Prisma {
     priority?: number
     status?: $Enums.TaskStatus
     leadId?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17275,6 +17715,7 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     leadId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17556,6 +17997,12 @@ export namespace Prisma {
     none?: MessageTemplateWhereInput
   }
 
+  export type TaskListRelationFilter = {
+    every?: TaskWhereInput
+    some?: TaskWhereInput
+    none?: TaskWhereInput
+  }
+
   export type LeadOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -17569,6 +18016,10 @@ export namespace Prisma {
   }
 
   export type MessageTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17651,12 +18102,12 @@ export namespace Prisma {
     not?: NestedEnumLeadStageFilter<$PrismaModel> | $Enums.LeadStage
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
+  export type EnumLeadSourceNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadSource | EnumLeadSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLeadSourceNullableFilter<$PrismaModel> | $Enums.LeadSource | null
+    isSet?: boolean
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -17669,6 +18120,30 @@ export namespace Prisma {
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
     isSet?: boolean
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -17705,21 +18180,11 @@ export namespace Prisma {
     none?: AiSuggestionWhereInput
   }
 
-  export type TaskListRelationFilter = {
-    every?: TaskWhereInput
-    some?: TaskWhereInput
-    none?: TaskWhereInput
-  }
-
   export type ConversationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type AiSuggestionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17733,10 +18198,19 @@ export namespace Prisma {
     position?: SortOrder
     notes?: SortOrder
     stage?: SortOrder
+    source?: SortOrder
+    confidence?: SortOrder
+    priority?: SortOrder
+    isArchived?: SortOrder
+    isDeleted?: SortOrder
     tags?: SortOrder
     score?: SortOrder
     userId?: SortOrder
+    assignedToId?: SortOrder
     campaignId?: SortOrder
+    timezone?: SortOrder
+    region?: SortOrder
+    address?: SortOrder
     lastActivity?: SortOrder
     lastContactedDate?: SortOrder
     nextContactDate?: SortOrder
@@ -17745,6 +18219,8 @@ export namespace Prisma {
   }
 
   export type LeadAvgOrderByAggregateInput = {
+    confidence?: SortOrder
+    priority?: SortOrder
     score?: SortOrder
   }
 
@@ -17758,9 +18234,17 @@ export namespace Prisma {
     position?: SortOrder
     notes?: SortOrder
     stage?: SortOrder
+    source?: SortOrder
+    confidence?: SortOrder
+    priority?: SortOrder
+    isArchived?: SortOrder
+    isDeleted?: SortOrder
     score?: SortOrder
     userId?: SortOrder
+    assignedToId?: SortOrder
     campaignId?: SortOrder
+    timezone?: SortOrder
+    region?: SortOrder
     lastActivity?: SortOrder
     lastContactedDate?: SortOrder
     nextContactDate?: SortOrder
@@ -17778,9 +18262,17 @@ export namespace Prisma {
     position?: SortOrder
     notes?: SortOrder
     stage?: SortOrder
+    source?: SortOrder
+    confidence?: SortOrder
+    priority?: SortOrder
+    isArchived?: SortOrder
+    isDeleted?: SortOrder
     score?: SortOrder
     userId?: SortOrder
+    assignedToId?: SortOrder
     campaignId?: SortOrder
+    timezone?: SortOrder
+    region?: SortOrder
     lastActivity?: SortOrder
     lastContactedDate?: SortOrder
     nextContactDate?: SortOrder
@@ -17789,6 +18281,8 @@ export namespace Prisma {
   }
 
   export type LeadSumOrderByAggregateInput = {
+    confidence?: SortOrder
+    priority?: SortOrder
     score?: SortOrder
   }
 
@@ -17821,6 +18315,17 @@ export namespace Prisma {
     _max?: NestedEnumLeadStageFilter<$PrismaModel>
   }
 
+  export type EnumLeadSourceNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadSource | EnumLeadSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLeadSourceNullableWithAggregatesFilter<$PrismaModel> | $Enums.LeadSource | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLeadSourceNullableFilter<$PrismaModel>
+    _max?: NestedEnumLeadSourceNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -17836,6 +18341,30 @@ export namespace Prisma {
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
     isSet?: boolean
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -17858,11 +18387,6 @@ export namespace Prisma {
     in?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumConversationTypeFilter<$PrismaModel> | $Enums.ConversationType
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type LeadScalarRelationFilter = {
@@ -17928,30 +18452,11 @@ export namespace Prisma {
     _max?: NestedEnumConversationTypeFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type EnumSuggestionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.SuggestionStatus | EnumSuggestionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumSuggestionStatusFilter<$PrismaModel> | $Enums.SuggestionStatus
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type MessageTemplateNullableScalarRelationFilter = {
@@ -17963,12 +18468,13 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
+    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
+    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
-    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17982,12 +18488,13 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
+    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
+    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
-    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17997,12 +18504,13 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
+    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
+    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
-    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18020,22 +18528,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSuggestionStatusFilter<$PrismaModel>
     _max?: NestedEnumSuggestionStatusFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type CampaignStepListRelationFilter = {
@@ -18275,6 +18767,7 @@ export namespace Prisma {
     priority?: SortOrder
     status?: SortOrder
     leadId?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18291,6 +18784,7 @@ export namespace Prisma {
     priority?: SortOrder
     status?: SortOrder
     leadId?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18303,6 +18797,7 @@ export namespace Prisma {
     priority?: SortOrder
     status?: SortOrder
     leadId?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18459,6 +18954,13 @@ export namespace Prisma {
     connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
   }
 
+  export type LeadCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<LeadCreateWithoutAssignedToInput, LeadUncheckedCreateWithoutAssignedToInput> | LeadCreateWithoutAssignedToInput[] | LeadUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutAssignedToInput | LeadCreateOrConnectWithoutAssignedToInput[]
+    createMany?: LeadCreateManyAssignedToInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
   export type NotificationCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -18480,10 +18982,24 @@ export namespace Prisma {
     connect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
   }
 
+  export type TaskCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type LeadUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<LeadCreateWithoutUserInput, LeadUncheckedCreateWithoutUserInput> | LeadCreateWithoutUserInput[] | LeadUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LeadCreateOrConnectWithoutUserInput | LeadCreateOrConnectWithoutUserInput[]
     createMany?: LeadCreateManyUserInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
+  export type LeadUncheckedCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<LeadCreateWithoutAssignedToInput, LeadUncheckedCreateWithoutAssignedToInput> | LeadCreateWithoutAssignedToInput[] | LeadUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutAssignedToInput | LeadCreateOrConnectWithoutAssignedToInput[]
+    createMany?: LeadCreateManyAssignedToInputEnvelope
     connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
   }
 
@@ -18508,6 +19024,13 @@ export namespace Prisma {
     connect?: MessageTemplateWhereUniqueInput | MessageTemplateWhereUniqueInput[]
   }
 
+  export type TaskUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole
   }
@@ -18523,6 +19046,20 @@ export namespace Prisma {
     connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
     update?: LeadUpdateWithWhereUniqueWithoutUserInput | LeadUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: LeadUpdateManyWithWhereWithoutUserInput | LeadUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
+  export type LeadUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<LeadCreateWithoutAssignedToInput, LeadUncheckedCreateWithoutAssignedToInput> | LeadCreateWithoutAssignedToInput[] | LeadUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutAssignedToInput | LeadCreateOrConnectWithoutAssignedToInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutAssignedToInput | LeadUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: LeadCreateManyAssignedToInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutAssignedToInput | LeadUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutAssignedToInput | LeadUpdateManyWithWhereWithoutAssignedToInput[]
     deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
   }
 
@@ -18568,6 +19105,20 @@ export namespace Prisma {
     deleteMany?: MessageTemplateScalarWhereInput | MessageTemplateScalarWhereInput[]
   }
 
+  export type TaskUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
   export type LeadUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<LeadCreateWithoutUserInput, LeadUncheckedCreateWithoutUserInput> | LeadCreateWithoutUserInput[] | LeadUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LeadCreateOrConnectWithoutUserInput | LeadCreateOrConnectWithoutUserInput[]
@@ -18579,6 +19130,20 @@ export namespace Prisma {
     connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
     update?: LeadUpdateWithWhereUniqueWithoutUserInput | LeadUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: LeadUpdateManyWithWhereWithoutUserInput | LeadUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
+  export type LeadUncheckedUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<LeadCreateWithoutAssignedToInput, LeadUncheckedCreateWithoutAssignedToInput> | LeadCreateWithoutAssignedToInput[] | LeadUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutAssignedToInput | LeadCreateOrConnectWithoutAssignedToInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutAssignedToInput | LeadUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: LeadCreateManyAssignedToInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutAssignedToInput | LeadUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutAssignedToInput | LeadUpdateManyWithWhereWithoutAssignedToInput[]
     deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
   }
 
@@ -18624,6 +19189,20 @@ export namespace Prisma {
     deleteMany?: MessageTemplateScalarWhereInput | MessageTemplateScalarWhereInput[]
   }
 
+  export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
   export type LeadCreatetagsInput = {
     set: string[]
   }
@@ -18631,6 +19210,12 @@ export namespace Prisma {
   export type UserCreateNestedOneWithoutLeadsInput = {
     create?: XOR<UserCreateWithoutLeadsInput, UserUncheckedCreateWithoutLeadsInput>
     connectOrCreate?: UserCreateOrConnectWithoutLeadsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAssignedLeadsInput = {
+    create?: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedLeadsInput
     connect?: UserWhereUniqueInput
   }
 
@@ -18691,9 +19276,9 @@ export namespace Prisma {
     set?: $Enums.LeadStage
   }
 
-  export type LeadUpdatetagsInput = {
-    set?: string[]
-    push?: string | string[]
+  export type NullableEnumLeadSourceFieldUpdateOperationsInput = {
+    set?: $Enums.LeadSource | null
+    unset?: boolean
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -18703,6 +19288,23 @@ export namespace Prisma {
     multiply?: number
     divide?: number
     unset?: boolean
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type LeadUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -18718,6 +19320,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeadsInput, UserUpdateWithoutLeadsInput>, UserUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type UserUpdateOneWithoutAssignedLeadsNestedInput = {
+    create?: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedLeadsInput
+    upsert?: UserUpsertWithoutAssignedLeadsInput
+    disconnect?: boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedLeadsInput, UserUpdateWithoutAssignedLeadsInput>, UserUncheckedUpdateWithoutAssignedLeadsInput>
   }
 
   export type CampaignUpdateOneWithoutLeadsNestedInput = {
@@ -18824,10 +19436,6 @@ export namespace Prisma {
     set?: $Enums.ConversationType
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type LeadUpdateOneRequiredWithoutConversationsNestedInput = {
     create?: XOR<LeadCreateWithoutConversationsInput, LeadUncheckedCreateWithoutConversationsInput>
     connectOrCreate?: LeadCreateOrConnectWithoutConversationsInput
@@ -18850,14 +19458,6 @@ export namespace Prisma {
 
   export type EnumSuggestionStatusFieldUpdateOperationsInput = {
     set?: $Enums.SuggestionStatus
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type LeadUpdateOneRequiredWithoutSuggestionsNestedInput = {
@@ -19131,6 +19731,12 @@ export namespace Prisma {
     connect?: LeadWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutTasksInput = {
+    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type EnumTaskStatusFieldUpdateOperationsInput = {
     set?: $Enums.TaskStatus
   }
@@ -19143,6 +19749,16 @@ export namespace Prisma {
     delete?: LeadWhereInput | boolean
     connect?: LeadWhereUniqueInput
     update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutTasksInput, LeadUpdateWithoutTasksInput>, LeadUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserUpdateOneWithoutTasksNestedInput = {
+    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
+    upsert?: UserUpsertWithoutTasksInput
+    disconnect?: boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTasksInput, UserUpdateWithoutTasksInput>, UserUncheckedUpdateWithoutTasksInput>
   }
 
   export type UserCreateNestedOneWithoutNotificationsInput = {
@@ -19301,6 +19917,19 @@ export namespace Prisma {
     not?: NestedEnumLeadStageFilter<$PrismaModel> | $Enums.LeadStage
   }
 
+  export type NestedEnumLeadSourceNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadSource | EnumLeadSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLeadSourceNullableFilter<$PrismaModel> | $Enums.LeadSource | null
+    isSet?: boolean
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -19341,6 +19970,17 @@ export namespace Prisma {
     _max?: NestedEnumLeadStageFilter<$PrismaModel>
   }
 
+  export type NestedEnumLeadSourceNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadSource | EnumLeadSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LeadSource[] | ListEnumLeadSourceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLeadSourceNullableWithAggregatesFilter<$PrismaModel> | $Enums.LeadSource | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLeadSourceNullableFilter<$PrismaModel>
+    _max?: NestedEnumLeadSourceNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -19370,68 +20010,6 @@ export namespace Prisma {
     isSet?: boolean
   }
 
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-    isSet?: boolean
-  }
-
-  export type NestedEnumConversationTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ConversationType | EnumConversationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumConversationTypeFilter<$PrismaModel> | $Enums.ConversationType
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedEnumConversationTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ConversationType | EnumConversationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumConversationTypeWithAggregatesFilter<$PrismaModel> | $Enums.ConversationType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumConversationTypeFilter<$PrismaModel>
-    _max?: NestedEnumConversationTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedEnumSuggestionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.SuggestionStatus | EnumSuggestionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSuggestionStatusFilter<$PrismaModel> | $Enums.SuggestionStatus
-  }
-
-  export type NestedEnumSuggestionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SuggestionStatus | EnumSuggestionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSuggestionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SuggestionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSuggestionStatusFilter<$PrismaModel>
-    _max?: NestedEnumSuggestionStatusFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -19457,6 +20035,63 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type NestedEnumConversationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversationType | EnumConversationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConversationTypeFilter<$PrismaModel> | $Enums.ConversationType
+  }
+
+  export type NestedEnumConversationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversationType | EnumConversationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConversationType[] | ListEnumConversationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConversationTypeWithAggregatesFilter<$PrismaModel> | $Enums.ConversationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConversationTypeFilter<$PrismaModel>
+    _max?: NestedEnumConversationTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSuggestionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SuggestionStatus | EnumSuggestionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSuggestionStatusFilter<$PrismaModel> | $Enums.SuggestionStatus
+  }
+
+  export type NestedEnumSuggestionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SuggestionStatus | EnumSuggestionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SuggestionStatus[] | ListEnumSuggestionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSuggestionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SuggestionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSuggestionStatusFilter<$PrismaModel>
+    _max?: NestedEnumSuggestionStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumStepTypeFilter<$PrismaModel = never> = {
@@ -19582,13 +20217,22 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     campaign?: CampaignCreateNestedOneWithoutLeadsInput
     conversations?: ConversationCreateNestedManyWithoutLeadInput
     suggestions?: AiSuggestionCreateNestedManyWithoutLeadInput
@@ -19605,9 +20249,18 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -19625,6 +20278,79 @@ export namespace Prisma {
 
   export type LeadCreateManyUserInputEnvelope = {
     data: LeadCreateManyUserInput | LeadCreateManyUserInput[]
+  }
+
+  export type LeadCreateWithoutAssignedToInput = {
+    id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    linkedinUrl?: string | null
+    company?: string | null
+    position?: string | null
+    notes?: string | null
+    stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
+    tags?: LeadCreatetagsInput | string[]
+    score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
+    lastActivity?: Date | string | null
+    lastContactedDate?: Date | string | null
+    nextContactDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutLeadsInput
+    campaign?: CampaignCreateNestedOneWithoutLeadsInput
+    conversations?: ConversationCreateNestedManyWithoutLeadInput
+    suggestions?: AiSuggestionCreateNestedManyWithoutLeadInput
+    tasks?: TaskCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadUncheckedCreateWithoutAssignedToInput = {
+    id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    linkedinUrl?: string | null
+    company?: string | null
+    position?: string | null
+    notes?: string | null
+    stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
+    tags?: LeadCreatetagsInput | string[]
+    score?: number | null
+    userId?: string | null
+    campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
+    lastActivity?: Date | string | null
+    lastContactedDate?: Date | string | null
+    nextContactDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversations?: ConversationUncheckedCreateNestedManyWithoutLeadInput
+    suggestions?: AiSuggestionUncheckedCreateNestedManyWithoutLeadInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadCreateOrConnectWithoutAssignedToInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutAssignedToInput, LeadUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type LeadCreateManyAssignedToInputEnvelope = {
+    data: LeadCreateManyAssignedToInput | LeadCreateManyAssignedToInput[]
   }
 
   export type NotificationCreateWithoutUserInput = {
@@ -19728,6 +20454,39 @@ export namespace Prisma {
     data: MessageTemplateCreateManyUserInput | MessageTemplateCreateManyUserInput[]
   }
 
+  export type TaskCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    dueDate?: Date | string | null
+    priority?: number
+    status?: $Enums.TaskStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lead?: LeadCreateNestedOneWithoutTasksInput
+  }
+
+  export type TaskUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    dueDate?: Date | string | null
+    priority?: number
+    status?: $Enums.TaskStatus
+    leadId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskCreateOrConnectWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type TaskCreateManyUserInputEnvelope = {
+    data: TaskCreateManyUserInput | TaskCreateManyUserInput[]
+  }
+
   export type LeadUpsertWithWhereUniqueWithoutUserInput = {
     where: LeadWhereUniqueInput
     update: XOR<LeadUpdateWithoutUserInput, LeadUncheckedUpdateWithoutUserInput>
@@ -19757,15 +20516,40 @@ export namespace Prisma {
     position?: StringNullableFilter<"Lead"> | string | null
     notes?: StringNullableFilter<"Lead"> | string | null
     stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
+    source?: EnumLeadSourceNullableFilter<"Lead"> | $Enums.LeadSource | null
+    confidence?: IntNullableFilter<"Lead"> | number | null
+    priority?: IntFilter<"Lead"> | number
+    isArchived?: BoolFilter<"Lead"> | boolean
+    isDeleted?: BoolFilter<"Lead"> | boolean
     tags?: StringNullableListFilter<"Lead">
     score?: IntNullableFilter<"Lead"> | number | null
     userId?: StringNullableFilter<"Lead"> | string | null
+    assignedToId?: StringNullableFilter<"Lead"> | string | null
     campaignId?: StringNullableFilter<"Lead"> | string | null
+    timezone?: StringNullableFilter<"Lead"> | string | null
+    region?: StringNullableFilter<"Lead"> | string | null
+    address?: JsonNullableFilter<"Lead">
     lastActivity?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lastContactedDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
     nextContactDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
+  }
+
+  export type LeadUpsertWithWhereUniqueWithoutAssignedToInput = {
+    where: LeadWhereUniqueInput
+    update: XOR<LeadUpdateWithoutAssignedToInput, LeadUncheckedUpdateWithoutAssignedToInput>
+    create: XOR<LeadCreateWithoutAssignedToInput, LeadUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type LeadUpdateWithWhereUniqueWithoutAssignedToInput = {
+    where: LeadWhereUniqueInput
+    data: XOR<LeadUpdateWithoutAssignedToInput, LeadUncheckedUpdateWithoutAssignedToInput>
+  }
+
+  export type LeadUpdateManyWithWhereWithoutAssignedToInput = {
+    where: LeadScalarWhereInput
+    data: XOR<LeadUpdateManyMutationInput, LeadUncheckedUpdateManyWithoutAssignedToInput>
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
@@ -19861,6 +20645,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"MessageTemplate"> | Date | string
   }
 
+  export type TaskUpsertWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutUserInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TaskScalarWhereInput = {
+    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    OR?: TaskScalarWhereInput[]
+    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    id?: StringFilter<"Task"> | string
+    title?: StringFilter<"Task"> | string
+    description?: StringNullableFilter<"Task"> | string | null
+    dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
+    priority?: IntFilter<"Task"> | number
+    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    leadId?: StringNullableFilter<"Task"> | string | null
+    userId?: StringNullableFilter<"Task"> | string | null
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+  }
+
   export type UserCreateWithoutLeadsInput = {
     id?: string
     email: string
@@ -19870,9 +20686,11 @@ export namespace Prisma {
     preferences?: InputJsonValue | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedLeads?: LeadCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     campaigns?: CampaignCreateNestedManyWithoutUserInput
     templates?: MessageTemplateCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLeadsInput = {
@@ -19884,14 +20702,53 @@ export namespace Prisma {
     preferences?: InputJsonValue | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedLeads?: LeadUncheckedCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     campaigns?: CampaignUncheckedCreateNestedManyWithoutUserInput
     templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLeadsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutLeadsInput, UserUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type UserCreateWithoutAssignedLeadsInput = {
+    id?: string
+    email: string
+    name: string
+    password: string
+    role?: $Enums.UserRole
+    preferences?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutUserInput
+    templates?: MessageTemplateCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAssignedLeadsInput = {
+    id?: string
+    email: string
+    name: string
+    password: string
+    role?: $Enums.UserRole
+    preferences?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutUserInput
+    templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAssignedLeadsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
   }
 
   export type CampaignCreateWithoutLeadsInput = {
@@ -19965,12 +20822,13 @@ export namespace Prisma {
   export type AiSuggestionCreateWithoutLeadInput = {
     id?: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     template?: MessageTemplateCreateNestedOneWithoutSuggestionsInput
@@ -19979,12 +20837,13 @@ export namespace Prisma {
   export type AiSuggestionUncheckedCreateWithoutLeadInput = {
     id?: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20008,6 +20867,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutTasksInput
   }
 
   export type TaskUncheckedCreateWithoutLeadInput = {
@@ -20017,6 +20877,7 @@ export namespace Prisma {
     dueDate?: Date | string | null
     priority?: number
     status?: $Enums.TaskStatus
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20049,9 +20910,11 @@ export namespace Prisma {
     preferences?: InputJsonValue | InputJsonValue | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedLeads?: LeadUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     campaigns?: CampaignUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadsInput = {
@@ -20062,9 +20925,52 @@ export namespace Prisma {
     preferences?: InputJsonValue | InputJsonValue | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     campaigns?: CampaignUncheckedUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutAssignedLeadsInput = {
+    update: XOR<UserUpdateWithoutAssignedLeadsInput, UserUncheckedUpdateWithoutAssignedLeadsInput>
+    create: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssignedLeadsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssignedLeadsInput, UserUncheckedUpdateWithoutAssignedLeadsInput>
+  }
+
+  export type UserUpdateWithoutAssignedLeadsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferences?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutUserNestedInput
+    templates?: MessageTemplateUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferences?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutUserNestedInput
+    templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CampaignUpsertWithoutLeadsInput = {
@@ -20158,12 +21064,13 @@ export namespace Prisma {
     id?: StringFilter<"AiSuggestion"> | string
     leadId?: StringFilter<"AiSuggestion"> | string
     suggestion?: StringFilter<"AiSuggestion"> | string
+    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     type?: StringFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntFilter<"AiSuggestion"> | number
+    context?: StringNullableFilter<"AiSuggestion"> | string | null
     done?: BoolFilter<"AiSuggestion"> | boolean
     isViewed?: BoolFilter<"AiSuggestion"> | boolean
-    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeFilter<"AiSuggestion"> | Date | string
@@ -20185,21 +21092,6 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutLeadInput>
   }
 
-  export type TaskScalarWhereInput = {
-    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
-    OR?: TaskScalarWhereInput[]
-    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
-    id?: StringFilter<"Task"> | string
-    title?: StringFilter<"Task"> | string
-    description?: StringNullableFilter<"Task"> | string | null
-    dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
-    priority?: IntFilter<"Task"> | number
-    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
-    leadId?: StringNullableFilter<"Task"> | string | null
-    createdAt?: DateTimeFilter<"Task"> | Date | string
-    updatedAt?: DateTimeFilter<"Task"> | Date | string
-  }
-
   export type LeadCreateWithoutConversationsInput = {
     id?: string
     name: string
@@ -20210,14 +21102,23 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutLeadsInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     campaign?: CampaignCreateNestedOneWithoutLeadsInput
     suggestions?: AiSuggestionCreateNestedManyWithoutLeadInput
     tasks?: TaskCreateNestedManyWithoutLeadInput
@@ -20233,10 +21134,19 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -20271,14 +21181,23 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutLeadsNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     campaign?: CampaignUpdateOneWithoutLeadsNestedInput
     suggestions?: AiSuggestionUpdateManyWithoutLeadNestedInput
     tasks?: TaskUpdateManyWithoutLeadNestedInput
@@ -20293,10 +21212,19 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20316,14 +21244,23 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutLeadsInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     campaign?: CampaignCreateNestedOneWithoutLeadsInput
     conversations?: ConversationCreateNestedManyWithoutLeadInput
     tasks?: TaskCreateNestedManyWithoutLeadInput
@@ -20339,10 +21276,19 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -20410,14 +21356,23 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutLeadsNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     campaign?: CampaignUpdateOneWithoutLeadsNestedInput
     conversations?: ConversationUpdateManyWithoutLeadNestedInput
     tasks?: TaskUpdateManyWithoutLeadNestedInput
@@ -20432,10 +21387,19 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20525,14 +21489,23 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutLeadsInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     conversations?: ConversationCreateNestedManyWithoutLeadInput
     suggestions?: AiSuggestionCreateNestedManyWithoutLeadInput
     tasks?: TaskCreateNestedManyWithoutLeadInput
@@ -20548,9 +21521,18 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -20580,8 +21562,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     templates?: MessageTemplateCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCampaignsInput = {
@@ -20594,8 +21578,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadUncheckedCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadUncheckedCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCampaignsInput = {
@@ -20671,8 +21657,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCampaignsInput = {
@@ -20684,8 +21672,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUncheckedUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CampaignCreateWithoutStepsInput = {
@@ -20830,8 +21820,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     campaigns?: CampaignCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTemplatesInput = {
@@ -20844,8 +21836,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadUncheckedCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadUncheckedCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     campaigns?: CampaignUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTemplatesInput = {
@@ -20856,12 +21850,13 @@ export namespace Prisma {
   export type AiSuggestionCreateWithoutTemplateInput = {
     id?: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutSuggestionsInput
@@ -20871,12 +21866,13 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20943,8 +21939,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     campaigns?: CampaignUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTemplatesInput = {
@@ -20956,8 +21954,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUncheckedUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     campaigns?: CampaignUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AiSuggestionUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -21002,14 +22002,23 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutLeadsInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     campaign?: CampaignCreateNestedOneWithoutLeadsInput
     conversations?: ConversationCreateNestedManyWithoutLeadInput
     suggestions?: AiSuggestionCreateNestedManyWithoutLeadInput
@@ -21025,10 +22034,19 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -21041,6 +22059,43 @@ export namespace Prisma {
   export type LeadCreateOrConnectWithoutTasksInput = {
     where: LeadWhereUniqueInput
     create: XOR<LeadCreateWithoutTasksInput, LeadUncheckedCreateWithoutTasksInput>
+  }
+
+  export type UserCreateWithoutTasksInput = {
+    id?: string
+    email: string
+    name: string
+    password: string
+    role?: $Enums.UserRole
+    preferences?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadCreateNestedManyWithoutAssignedToInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutUserInput
+    templates?: MessageTemplateCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTasksInput = {
+    id?: string
+    email: string
+    name: string
+    password: string
+    role?: $Enums.UserRole
+    preferences?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadUncheckedCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadUncheckedCreateNestedManyWithoutAssignedToInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutUserInput
+    templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTasksInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
   }
 
   export type LeadUpsertWithoutTasksInput = {
@@ -21063,14 +22118,23 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutLeadsNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     campaign?: CampaignUpdateOneWithoutLeadsNestedInput
     conversations?: ConversationUpdateManyWithoutLeadNestedInput
     suggestions?: AiSuggestionUpdateManyWithoutLeadNestedInput
@@ -21085,10 +22149,19 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21096,6 +22169,47 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversations?: ConversationUncheckedUpdateManyWithoutLeadNestedInput
     suggestions?: AiSuggestionUncheckedUpdateManyWithoutLeadNestedInput
+  }
+
+  export type UserUpsertWithoutTasksInput = {
+    update: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+    create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTasksInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserUpdateWithoutTasksInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferences?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUpdateManyWithoutAssignedToNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutUserNestedInput
+    templates?: MessageTemplateUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTasksInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferences?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUncheckedUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutUserNestedInput
+    templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -21108,8 +22222,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadCreateNestedManyWithoutAssignedToInput
     campaigns?: CampaignCreateNestedManyWithoutUserInput
     templates?: MessageTemplateCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -21122,8 +22238,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadUncheckedCreateNestedManyWithoutUserInput
+    assignedLeads?: LeadUncheckedCreateNestedManyWithoutAssignedToInput
     campaigns?: CampaignUncheckedCreateNestedManyWithoutUserInput
     templates?: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -21151,8 +22269,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUpdateManyWithoutAssignedToNestedInput
     campaigns?: CampaignUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -21164,8 +22284,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUncheckedUpdateManyWithoutUserNestedInput
+    assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
     campaigns?: CampaignUncheckedUpdateManyWithoutUserNestedInput
     templates?: MessageTemplateUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LeadCreateManyUserInput = {
@@ -21178,9 +22300,47 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
+    assignedToId?: string | null
     campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
+    lastActivity?: Date | string | null
+    lastContactedDate?: Date | string | null
+    nextContactDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCreateManyAssignedToInput = {
+    id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    linkedinUrl?: string | null
+    company?: string | null
+    position?: string | null
+    notes?: string | null
+    stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
+    tags?: LeadCreatetagsInput | string[]
+    score?: number | null
+    userId?: string | null
+    campaignId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -21221,6 +22381,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TaskCreateManyUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    dueDate?: Date | string | null
+    priority?: number
+    status?: $Enums.TaskStatus
+    leadId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type LeadUpdateWithoutUserInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21230,13 +22402,22 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     campaign?: CampaignUpdateOneWithoutLeadsNestedInput
     conversations?: ConversationUpdateManyWithoutLeadNestedInput
     suggestions?: AiSuggestionUpdateManyWithoutLeadNestedInput
@@ -21252,9 +22433,18 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21274,9 +22464,108 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
+    lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadUpdateWithoutAssignedToInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    tags?: LeadUpdatetagsInput | string[]
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
+    lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutLeadsNestedInput
+    campaign?: CampaignUpdateOneWithoutLeadsNestedInput
+    conversations?: ConversationUpdateManyWithoutLeadNestedInput
+    suggestions?: AiSuggestionUpdateManyWithoutLeadNestedInput
+    tasks?: TaskUpdateManyWithoutLeadNestedInput
+  }
+
+  export type LeadUncheckedUpdateWithoutAssignedToInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    tags?: LeadUpdatetagsInput | string[]
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
+    lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversations?: ConversationUncheckedUpdateManyWithoutLeadNestedInput
+    suggestions?: AiSuggestionUncheckedUpdateManyWithoutLeadNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutLeadNestedInput
+  }
+
+  export type LeadUncheckedUpdateManyWithoutAssignedToInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    tags?: LeadUpdatetagsInput | string[]
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21382,6 +22671,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskUpdateWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lead?: LeadUpdateOneWithoutTasksNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    leadId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskUncheckedUpdateManyWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    leadId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ConversationCreateManyLeadInput = {
     id?: string
     type: $Enums.ConversationType
@@ -21400,12 +22722,13 @@ export namespace Prisma {
   export type AiSuggestionCreateManyLeadInput = {
     id?: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21418,6 +22741,7 @@ export namespace Prisma {
     dueDate?: Date | string | null
     priority?: number
     status?: $Enums.TaskStatus
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21466,12 +22790,13 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateWithoutLeadInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: MessageTemplateUpdateOneWithoutSuggestionsNestedInput
@@ -21479,12 +22804,13 @@ export namespace Prisma {
 
   export type AiSuggestionUncheckedUpdateWithoutLeadInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21492,12 +22818,13 @@ export namespace Prisma {
 
   export type AiSuggestionUncheckedUpdateManyWithoutLeadInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21511,6 +22838,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutTasksNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutLeadInput = {
@@ -21519,6 +22847,7 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: IntFieldUpdateOperationsInput | number
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21529,6 +22858,7 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: IntFieldUpdateOperationsInput | number
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21555,9 +22885,18 @@ export namespace Prisma {
     position?: string | null
     notes?: string | null
     stage?: $Enums.LeadStage
+    source?: $Enums.LeadSource | null
+    confidence?: number | null
+    priority?: number
+    isArchived?: boolean
+    isDeleted?: boolean
     tags?: LeadCreatetagsInput | string[]
     score?: number | null
     userId?: string | null
+    assignedToId?: string | null
+    timezone?: string | null
+    region?: string | null
+    address?: InputJsonValue | null
     lastActivity?: Date | string | null
     lastContactedDate?: Date | string | null
     nextContactDate?: Date | string | null
@@ -21607,14 +22946,23 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutLeadsNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     conversations?: ConversationUpdateManyWithoutLeadNestedInput
     suggestions?: AiSuggestionUpdateManyWithoutLeadNestedInput
     tasks?: TaskUpdateManyWithoutLeadNestedInput
@@ -21629,9 +22977,18 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21651,9 +23008,18 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    confidence?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isArchived?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     tags?: LeadUpdatetagsInput | string[]
     score?: NullableIntFieldUpdateOperationsInput | number | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: InputJsonValue | InputJsonValue | null
     lastActivity?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastContactedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextContactDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21665,12 +23031,13 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
+    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
+    context?: string | null
     done?: boolean
     isViewed?: boolean
-    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21689,12 +23056,13 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateWithoutTemplateInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutSuggestionsNestedInput
@@ -21703,12 +23071,13 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateWithoutTemplateInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21716,12 +23085,13 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateManyWithoutTemplateInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
+    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

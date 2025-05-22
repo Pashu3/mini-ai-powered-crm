@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { SidebarNav } from "@/components/dashboard/SidebarNav";
-import { Header } from "@/components/dashboard/Header";
+import { SidebarNav } from "@/components/ui/SidebarNav";
+import { Header } from "@/components/ui/Header";
 import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({

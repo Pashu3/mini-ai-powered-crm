@@ -25,39 +25,60 @@ model User {
   name          String
   password      String
   role          UserRole          @default(USER)
-  leads         Lead[]
+  leads         Lead[]            @relation("LeadOwner")
+  assignedLeads Lead[]            @relation("LeadAssignee")
   notifications Notification[]
-  campaigns     Campaign[] // User can own campaigns
-  templates     MessageTemplate[] // User can create templates
-  preferences   Json? // Store user preferences (theme, notifications settings)
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  campaigns     Campaign[]
+  templates     MessageTemplate[]
+  tasks         Task[] // Add this relation
+
+  preferences Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Lead {
-  id                String         @id @default(uuid()) @map("_id")
-  name              String
-  email             String?
-  phone             String?
-  linkedinUrl       String?
-  company           String?
-  position          String?
-  notes             String?
-  stage             LeadStage      @default(NEW)
-  tags              String[]
-  score             Int? // Lead scoring based on engagement
-  userId            String?
-  user              User?          @relation(fields: [userId], references: [id])
-  campaignId        String?
-  campaign          Campaign?      @relation(fields: [campaignId], references: [id])
+  id          String      @id @default(uuid()) @map("_id")
+  name        String
+  email       String?
+  phone       String?
+  linkedinUrl String?
+  company     String?
+  position    String?
+  notes       String?
+  stage       LeadStage   @default(NEW)
+  source      LeadSource? // Track where the lead came from
+  confidence  Int?        @default(50) // Confidence score for closing (0-100)
+  priority    Int         @default(2) // Priority level (1-5)
+  isArchived  Boolean     @default(false) // Soft delete/archive flag
+  isDeleted   Boolean     @default(false) // Soft delete flag
+  tags        String[]
+  score       Int? // Lead scoring based on engagement
+
+  // User relationships
+  userId       String? // Creator/owner of the lead
+  user         User?   @relation("LeadOwner", fields: [userId], references: [id])
+  assignedToId String? // Person assigned to work the lead
+  assignedTo   User?   @relation("LeadAssignee", fields: [assignedToId], references: [id])
+
+  // Campaign relationship
+  campaignId String?
+  campaign   Campaign? @relation(fields: [campaignId], references: [id])
+
+  // Time and tracking fields
+  timezone          String? // Lead's timezone for scheduling
+  region            String? // Geographic region/territory
+  address           Json? // Structured address information
   lastActivity      DateTime?
   lastContactedDate DateTime?
   nextContactDate   DateTime?
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  conversations     Conversation[]
-  suggestions       AiSuggestion[]
-  tasks             Task[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Related records
+  conversations Conversation[]
+  suggestions   AiSuggestion[]
+  tasks         Task[]
 }
 
 model Conversation {
@@ -82,13 +103,14 @@ model AiSuggestion {
   leadId     String
   lead       Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
   suggestion String
+  reasoning  String? // Why AI made this suggestion
   type       String
   status     SuggestionStatus @default(NEW)
   priority   Int              @default(1)
+  context    String? // JSON string storing generation context
   done       Boolean          @default(false)
-  isViewed   Boolean          @default(false) // Track if user has seen the suggestion
-  reasoning  String? // Why AI made this suggestion
-  templateId String? // Link to suggested template if applicable
+  isViewed   Boolean          @default(false)
+  templateId String?
   template   MessageTemplate? @relation(fields: [templateId], references: [id])
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
@@ -158,6 +180,8 @@ model Task {
   status      TaskStatus @default(PENDING)
   leadId      String? // Optional relation to Lead
   lead        Lead?      @relation(fields: [leadId], references: [id])
+  userId      String? // User assigned to the task
+  user        User?      @relation(fields: [userId], references: [id])
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -262,4 +286,18 @@ enum JobStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+enum LeadSource {
+  LINKEDIN
+  COLD_EMAIL
+  WEBSITE
+  REFERRAL
+  CONFERENCE
+  WEBINAR
+  INBOUND_CALL
+  OUTBOUND_CALL
+  SOCIAL_MEDIA
+  PARTNER
+  OTHER
 }

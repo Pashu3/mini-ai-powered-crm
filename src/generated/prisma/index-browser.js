@@ -142,10 +142,19 @@ exports.Prisma.LeadScalarFieldEnum = {
   position: 'position',
   notes: 'notes',
   stage: 'stage',
+  source: 'source',
+  confidence: 'confidence',
+  priority: 'priority',
+  isArchived: 'isArchived',
+  isDeleted: 'isDeleted',
   tags: 'tags',
   score: 'score',
   userId: 'userId',
+  assignedToId: 'assignedToId',
   campaignId: 'campaignId',
+  timezone: 'timezone',
+  region: 'region',
+  address: 'address',
   lastActivity: 'lastActivity',
   lastContactedDate: 'lastContactedDate',
   nextContactDate: 'nextContactDate',
@@ -173,12 +182,13 @@ exports.Prisma.AiSuggestionScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
   suggestion: 'suggestion',
+  reasoning: 'reasoning',
   type: 'type',
   status: 'status',
   priority: 'priority',
+  context: 'context',
   done: 'done',
   isViewed: 'isViewed',
-  reasoning: 'reasoning',
   templateId: 'templateId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -239,6 +249,7 @@ exports.Prisma.TaskScalarFieldEnum = {
   priority: 'priority',
   status: 'status',
   leadId: 'leadId',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -289,6 +300,20 @@ exports.LeadStage = exports.$Enums.LeadStage = {
   NEGOTIATION: 'NEGOTIATION',
   CONVERTED: 'CONVERTED',
   LOST: 'LOST'
+};
+
+exports.LeadSource = exports.$Enums.LeadSource = {
+  LINKEDIN: 'LINKEDIN',
+  COLD_EMAIL: 'COLD_EMAIL',
+  WEBSITE: 'WEBSITE',
+  REFERRAL: 'REFERRAL',
+  CONFERENCE: 'CONFERENCE',
+  WEBINAR: 'WEBINAR',
+  INBOUND_CALL: 'INBOUND_CALL',
+  OUTBOUND_CALL: 'OUTBOUND_CALL',
+  SOCIAL_MEDIA: 'SOCIAL_MEDIA',
+  PARTNER: 'PARTNER',
+  OTHER: 'OTHER'
 };
 
 exports.ConversationType = exports.$Enums.ConversationType = {
