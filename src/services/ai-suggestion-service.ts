@@ -30,7 +30,10 @@ export async function generateSuggestion(leadId: string, userId: string) {
   const lead = await prisma.lead.findFirst({
     where: {
       id: leadId,
-      userId,
+      OR: [
+        { userId: userId },
+        { assignedToId: userId }
+      ],
     },
     include: {
       conversations: {
@@ -45,18 +48,53 @@ export async function generateSuggestion(leadId: string, userId: string) {
   }
   
   // Get AI suggestion
-  type NextStepSuggestionResponse = { text?: string; suggestion?: string };
+  type NextStepSuggestionResponse = { 
+    text?: string; 
+    suggestion?: string; 
+    reasoning?: string;
+    followUpDays?: number;
+    priority?: number;
+  };
+  
   const aiResponse = await getNextStepSuggestion(lead) as NextStepSuggestionResponse;
   
-  // Create suggestion record
+  // Calculate priority if not provided
+  const suggestionPriority = aiResponse.priority || 
+    calculateSuggestionPriority(lead.priority || 2, lead.confidence || 50);
+  
+  // Extract follow-up days if available
+  const followUpDays = aiResponse.followUpDays || 
+    getDefaultFollowUpDays(lead.source as any, lead.priority || 2);
+  
+  // Calculate follow-up date
+  const followUpDate = new Date();
+  followUpDate.setDate(followUpDate.getDate() + followUpDays);
+  
+  // Create suggestion record with enhanced data
   const suggestion = await prisma.aiSuggestion.create({
     data: {
       leadId,
-      suggestion: aiResponse.text || aiResponse.suggestion || '',
+      suggestion: aiResponse.suggestion || aiResponse.text || '',
+      reasoning: aiResponse.reasoning || null,
       type: 'NEXT_STEP',
-      priority: 2,
+      priority: suggestionPriority,
     },
   });
+  
+  // Optionally create a task based on the suggestion
+  if (suggestionPriority >= 3) {
+    await prisma.task.create({
+      data: {
+        title: `Follow up: ${aiResponse.suggestion?.substring(0, 50) || 'AI suggestion'}...`,
+        description: aiResponse.suggestion || aiResponse.text || '',
+        status: 'PENDING',
+        priority: lead.priority || 2,
+        dueDate: followUpDate,
+        leadId: lead.id,
+        userId: lead.assignedToId || userId,
+      }
+    });
+  }
   
   // Create notification for user
   await prisma.notification.create({
@@ -73,6 +111,31 @@ export async function generateSuggestion(leadId: string, userId: string) {
   return suggestion;
 }
 
+// Helper functions from lead-service.ts (import these or define here)
+function calculateSuggestionPriority(leadPriority: number, confidence: number): number {
+  if (leadPriority >= 3 && confidence >= 70) return 5;
+  if (leadPriority >= 3 && confidence >= 40) return 4;
+  if (leadPriority >= 2 && confidence >= 60) return 3;
+  if ((leadPriority >= 2 && confidence >= 30) || (leadPriority >= 3)) return 2;
+  return 1;
+}
+
+function getDefaultFollowUpDays(source: string, priority: number): number {
+  if (priority >= 3) return 1;
+  
+  switch (source) {
+    case 'INBOUND_CALL': return 1;
+    case 'WEBSITE': return 2;
+    case 'REFERRAL': return 2;
+    case 'LINKEDIN': return 3;
+    case 'CONFERENCE': 
+    case 'WEBINAR': return 2;
+    case 'SOCIAL_MEDIA': return 4;
+    case 'COLD_EMAIL': return 5;
+    case 'OUTBOUND_CALL': return 4;
+    default: return 3;
+  }
+}
 export async function generateEmailTemplate(
   leadId: string,
   userId: string,

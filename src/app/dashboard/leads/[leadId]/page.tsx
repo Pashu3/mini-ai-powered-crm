@@ -28,14 +28,17 @@ import {
   ListTodo,
   XCircle,
   CheckCircle2,
-  Clock
+  Clock,
+  Globe,
+  LightbulbIcon
 } from "lucide-react";
 import Link from "next/link";
 import DeleteLeadConfirmation from '@/components/leads/DeleteLeadConfirmation';
 import LeadSidebar from '@/components/leads/LeadSidebar';
 import { useToast } from "@/components/ui/toast/ToastContext";
-import { Campaign, Conversation, Lead, LeadStage, Task } from "@/types/lead";
-import { formatCurrency, formatDate, getStageColor, getCampaignStatusColor, getConversationTypeIcon } from "@/utils/styleHelpers";
+import { Campaign, Conversation, Lead, LeadStage, Task, Suggestion } from "@/types/lead";
+import { getLeadSourceLabel } from "@/lib/utils";
+import { formatCurrency, formatDate, getStageColor, getCampaignStatusColor, getConversationTypeIcon,getPriorityColor, getPriorityLabel } from "@/utils/styleHelpers";
 import LeadStageComponent from "@/components/leads/LeadStage";
 
 export default function LeadDetailPage() {
@@ -150,6 +153,7 @@ export default function LeadDetailPage() {
       fetchConversations();
     }
   }, [leadId, lead]);
+  
   const handleLeadUpdate = (updatedLead: Lead) => {
     setLead(updatedLead);
     setEditedLead(updatedLead);
@@ -158,6 +162,7 @@ export default function LeadDetailPage() {
       fetchCampaign(updatedLead.campaignId);
     }
   };
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     if (!editedLead) return;
 
@@ -165,7 +170,7 @@ export default function LeadDetailPage() {
 
     setEditedLead({
       ...editedLead,
-      [name]: name === 'score' || name === 'value'
+      [name]: name === 'score' || name === 'value' || name === 'priority' || name === 'confidence'
         ? (value ? parseInt(value) : undefined)
         : value,
     });
@@ -220,6 +225,9 @@ export default function LeadDetailPage() {
         score: editedLead.score,
         value: editedLead.value,
         source: editedLead.source,
+        confidence: editedLead.confidence,
+        priority: editedLead.priority,
+        region: editedLead.region,
         campaignId: editedLead.campaignId,
       };
 
@@ -317,6 +325,63 @@ export default function LeadDetailPage() {
     }
   };
 
+const handleSuggestionAction = async (suggestionId: string, markAsDone: boolean) => {
+  try {
+    const response = await fetch(`/api/leads/${leadId}/ai/suggestions/${suggestionId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        done: markAsDone,
+        isViewed: true
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update suggestion status');
+    }
+
+    if (lead && lead.suggestions) {
+      const updatedSuggestions = lead.suggestions.map(suggestion => {
+        if (suggestion.id === suggestionId) {
+          return { ...suggestion, done: markAsDone, isViewed: true };
+        }
+        return suggestion;
+      });
+
+      setLead({
+        ...lead,
+        suggestions: updatedSuggestions
+      });
+
+      if (editedLead) {
+        setEditedLead({
+          ...editedLead,
+          suggestions: updatedSuggestions
+        });
+      }
+    }
+
+    toast({
+      type: 'success',
+      title: markAsDone ? 'Suggestion marked as done' : 'Suggestion saved',
+      description: markAsDone ? 'The suggestion has been completed' : 'The suggestion has been saved for later',
+      duration: 3000
+    });
+  } catch (err) {
+    console.error('Failed to update suggestion:', err);
+    toast({
+      type: 'error',
+      title: 'Update failed',
+      description: 'Could not update suggestion status',
+      duration: 5000
+    });
+  }
+};
+
+
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -382,6 +447,15 @@ export default function LeadDetailPage() {
                   <span className="text-muted-foreground">•</span>
                   <span className={`px-2 py-0.5 text-xs rounded-full ${getStageColor(lead.stage)}`}>
                     {lead.stage.charAt(0) + lead.stage.slice(1).toLowerCase()}
+                  </span>
+                </>
+              )}
+              
+              {lead.source && (
+                <>
+                  <span className="text-muted-foreground">•</span>
+                  <span className="text-xs">
+                    {getLeadSourceLabel(lead.source)}
                   </span>
                 </>
               )}
@@ -470,6 +544,56 @@ export default function LeadDetailPage() {
           transition={{ duration: 0.4 }}
           className="lg:col-span-2 space-y-6"
         >
+          {/* AI Suggestions */}
+          {lead.suggestions && lead.suggestions.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-lg shadow-sm p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-primary">
+                <LightbulbIcon size={18} />
+                AI Suggested Actions
+              </h2>
+
+              <div className="space-y-4">
+                {lead.suggestions.map((suggestion: Suggestion) => (
+                  <div 
+                    key={suggestion.id}
+                    className={`p-4 border ${suggestion.done ? 'border-green-200 bg-green-50' : 'border-primary/20 bg-card'} rounded-md`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex gap-3">
+                        {suggestion.done ? (
+                          <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
+                        ) : (
+                          <LightbulbIcon className="h-5 w-5 text-amber-500 mt-0.5" />
+                        )}
+                        <div>
+                          <p className={`font-medium ${suggestion.done ? 'text-muted-foreground line-through' : ''}`}>
+                            {suggestion.suggestion}
+                          </p>
+                          {suggestion.reasoning && (
+                            <p className="text-sm text-muted-foreground mt-1">{suggestion.reasoning}</p>
+                          )}
+                        </div>
+                      </div>
+                      {!suggestion.done && (
+                        <button
+                          onClick={() => handleSuggestionAction(suggestion.id, true)}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-md text-xs hover:bg-primary/20 transition-colors"
+                        >
+                          Mark as done
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {/* Lead details card */}
           <div className="bg-card border border-border rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
@@ -629,6 +753,37 @@ export default function LeadDetailPage() {
                   )}
                 </div>
 
+                {/* Region */}
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
+                    Region
+                  </label>
+                  {isEditing ? (
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Globe size={16} className="text-muted-foreground" />
+                      </div>
+                      <input
+                        name="region"
+                        type="text"
+                        value={editedLead?.region || ''}
+                        onChange={handleChange}
+                        className="w-full pl-9 px-3 py-2 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        placeholder="North America, Europe, APAC, etc."
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Globe size={16} className="text-muted-foreground" />
+                      {lead.region ? (
+                        <span>{lead.region}</span>
+                      ) : (
+                        <span className="text-muted-foreground italic">Not specified</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 {/* Score */}
                 <div>
                   <label className="block text-sm font-medium text-muted-foreground mb-1">
@@ -660,6 +815,41 @@ export default function LeadDetailPage() {
                         </div>
                       ) : (
                         <span className="text-muted-foreground italic">Not rated</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Priority */}
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
+                    Priority
+                  </label>
+                  {isEditing ? (
+                    <select
+                      name="priority"
+                      value={editedLead?.priority || 2}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    >
+                      <option value={1}>1 - Very Low</option>
+                      <option value={2}>2 - Low</option>
+                      <option value={3}>3 - Medium</option>
+                      <option value={4}>4 - High</option>
+                      <option value={5}>5 - Very High</option>
+                    </select>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <BarChart size={16} className="text-muted-foreground" />
+                      {lead.priority ? (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{lead.priority}</span>
+                          <span className={`px-2 py-0.5 text-xs rounded-full ${getPriorityColor(lead.priority)}`}>
+                            {getPriorityLabel(lead.priority)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground italic">Not prioritized</span>
                       )}
                     </div>
                   )}
@@ -703,19 +893,30 @@ export default function LeadDetailPage() {
                     Lead Source
                   </label>
                   {isEditing ? (
-                    <input
+                    <select
                       name="source"
-                      type="text"
                       value={editedLead?.source || ''}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                      placeholder="Website, Referral, etc."
-                    />
+                    >
+                      <option value="">-- Select Source --</option>
+                      <option value="LINKEDIN">LinkedIn</option>
+                      <option value="COLD_EMAIL">Cold Email</option>
+                      <option value="WEBSITE">Website</option>
+                      <option value="REFERRAL">Referral</option>
+                      <option value="CONFERENCE">Conference</option>
+                      <option value="WEBINAR">Webinar</option>
+                      <option value="INBOUND_CALL">Inbound Call</option>
+                      <option value="OUTBOUND_CALL">Outbound Call</option>
+                      <option value="SOCIAL_MEDIA">Social Media</option>
+                      <option value="PARTNER">Partner</option>
+                      <option value="OTHER">Other</option>
+                    </select>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Users size={16} className="text-muted-foreground" />
                       {lead.source ? (
-                        <span>{lead.source}</span>
+                        <span>{getLeadSourceLabel(lead.source)}</span>
                       ) : (
                         <span className="text-muted-foreground italic">Not specified</span>
                       )}
@@ -775,6 +976,44 @@ export default function LeadDetailPage() {
                           <span className="text-muted-foreground italic">Not associated with any campaign</span>
                         </div>
                       )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Confidence */}
+              {(lead.confidence !== undefined || isEditing) && (
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
+                    Confidence Score
+                  </label>
+                  {isEditing ? (
+                    <input
+                      name="confidence"
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={editedLead?.confidence || ''}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    />
+                  ) : (
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{lead.confidence}%</span>
+                        <span className="text-xs text-muted-foreground">
+                          {(lead.confidence ?? 0) >= 70 ? 'High' : (lead.confidence ?? 0) >= 40 ? 'Medium' : 'Low'} confidence
+                        </span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${
+                            (lead.confidence ?? 0) >= 70 ? 'bg-green-500' : 
+                            (lead.confidence ?? 0) >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                          }`}
+                          style={{ width: `${Math.min(lead.confidence || 0, 100)}%` }}
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -986,6 +1225,7 @@ export default function LeadDetailPage() {
               </div>
             )}
           </motion.div>
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

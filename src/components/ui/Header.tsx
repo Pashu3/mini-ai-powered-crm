@@ -27,14 +27,11 @@ export function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const { lastNotification } = useSocketContext();
   
-  // User menu state
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   
-  // Get first name of user
   const firstName = session?.user?.name?.split(' ')[0] || 'User';
 
-  // Handle clicks outside of user menu to close it
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
@@ -49,7 +46,6 @@ export function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
   }, [userMenuRef]);
 
   useEffect(() => {
-    // Fetch unread notification count
     const fetchUnreadCount = async () => {
       try {
         const res = await fetch('/api/notifications/unread');
@@ -65,13 +61,11 @@ export function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
     
     fetchUnreadCount();
     
-    // Set up interval to refresh count
     const interval = setInterval(fetchUnreadCount, 60000); // every minute
     
     return () => clearInterval(interval);
   }, []);
 
-  // Update notification count when receiving a new notification
   useEffect(() => {
     if (lastNotification && !lastNotification.isRead) {
       setUnreadCount(prev => prev + 1);
@@ -109,42 +103,42 @@ export function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
         <Menu className="h-6 w-6" />
       </button>
 
-      {/* Global Search (Separate Component) */}
       <div className="max-w-md w-full hidden md:block">
         <GlobalSearch />
       </div>
       
       <div className="ml-auto flex items-center gap-3">
-        {/* Theme Toggle Component */}
         <ThemeToggle />
         
-        {/* Notifications Button */}
-        <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="relative p-2.5 rounded-md hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
-          onClick={() => {
-            setShowNotifications(!showNotifications);
-            if (showUserMenu) setShowUserMenu(false);
-          }}
-          aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
-        >
-          <Bell className="h-6 w-6" />
-          <AnimatePresence>
-            {unreadCount > 0 && (
-              <motion.span 
-                initial={{ scale: 0.5 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.5 }}
-                className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs font-semibold text-primary-foreground flex items-center justify-center shadow-sm"
-              >
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
+  <motion.button 
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="relative p-2.5 rounded-md hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
+  onClick={() => {
+    console.log('Notification button clicked, current state:', showNotifications);
+    setShowNotifications(!showNotifications);
+    console.log('Notification state after toggle:', !showNotifications);
+    if (showUserMenu) setShowUserMenu(false);
+        console.log('Hi  Notification state after toggle:', !showNotifications);
+
+  }}
+  aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
+>
+  <Bell className="h-6 w-6" />
+  <AnimatePresence>
+    {unreadCount > 0 && (
+      <motion.span 
+        initial={{ scale: 0.5 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.5 }}
+        className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs font-semibold text-primary-foreground flex items-center justify-center shadow-sm"
+      >
+        {unreadCount > 9 ? '9+' : unreadCount}
+      </motion.span>
+    )}
+  </AnimatePresence>
+</motion.button>
         
-        {/* User Menu */}
         <div className="relative" ref={userMenuRef}>
           <motion.button 
             whileHover={{ scale: 1.02 }}
@@ -237,7 +231,6 @@ export function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
         </div>
       </div>
 
-      {/* Notification Panel */}
       <NotificationPanel 
         isOpen={showNotifications} 
         onClose={() => setShowNotifications(false)} 

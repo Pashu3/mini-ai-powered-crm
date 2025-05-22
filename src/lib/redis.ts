@@ -1,6 +1,5 @@
 import { Redis } from 'ioredis';
 
-// Mock Redis client implementation for when Redis is unavailable
 class MockRedisClient {
   private cache = new Map<string, { value: string; expiry?: number }>();
 
@@ -118,7 +117,6 @@ const getRedisClient = (): RedisClientType => {
   }
 };
 
-// Create Redis client singleton with error handling
 let redisClient: RedisClientType;
 
 try {
@@ -130,7 +128,6 @@ try {
 
 export default redisClient;
 
-// Helper functions for cache operations with additional error handling
 export const cacheGet = async <T>(key: string): Promise<T | null> => {
   try {
     const data = await redisClient.get(key);
