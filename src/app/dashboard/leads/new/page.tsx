@@ -27,8 +27,8 @@ import {
   Clock
 } from "lucide-react";
 import { useToast } from "@/components/ui/toast/ToastContext";
+import { LeadStage } from "@/types/lead";
 
-type LeadStage = 'NEW' | 'CONTACTED' | 'QUALIFIED' | 'PROPOSAL' | 'NEGOTIATION' | 'CONVERTED' | 'LOST';
 
 export default function NewLeadPage() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function NewLeadPage() {
     title: '',
     description: '',
     dueDate: '',
-    priority: 2, // Default to medium priority
+    priority: 2, 
   });
   
   const [error, setError] = useState<string | null>(null);
@@ -61,12 +61,10 @@ export default function NewLeadPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fix for double scrollbars
     const bodyElement = document.querySelector('body');
     if (bodyElement) {
       bodyElement.style.overflow = 'hidden';
       
-      // Cleanup function to restore original state
       return () => {
         bodyElement.style.overflow = '';
       };
@@ -106,7 +104,6 @@ export default function NewLeadPage() {
       setLoading(true);
       setError(null);
       
-      // Transform data to match expected API format
       const payload = {
         ...formData,
         score: formData.score ? parseInt(formData.score) : undefined,
@@ -127,10 +124,8 @@ export default function NewLeadPage() {
       
       const data = await response.json();
       
-      // Get the ID of the newly created lead
       const leadId = data.success && data.data ? data.data.id : data.id;
       
-      // If task data is provided and includeTask is true, create a task
       if (includeTask && taskData.title && leadId) {
         const taskPayload = {
           ...taskData,
@@ -175,9 +170,7 @@ export default function NewLeadPage() {
         duration: 3000
       });
       
-      // Navigate after a brief delay to show success message
       setTimeout(() => {
-        // Navigate to the lead detail page if we have an ID, otherwise to leads list
         if (leadId) {
           router.push(`/dashboard/leads/${leadId}`);
         } else {

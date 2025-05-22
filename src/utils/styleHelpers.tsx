@@ -1,5 +1,28 @@
 import { LeadStage, ConversationType } from "@/types/lead";
-import { Mail, Phone, Calendar, MessageCircle, Linkedin, MessageSquare } from "lucide-react";
+import { Mail, Phone, Calendar, MessageCircle, Linkedin, MessageSquare, Check, AlertTriangle, AlertCircle, User, Users, Info } from "lucide-react";
+
+ export  const getNotificationIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'success':
+        return <Check className="h-5 w-5 text-green-500" />;
+      case 'warning':
+        return <AlertTriangle className="h-5 w-5 text-amber-500" />;
+      case 'error':
+        return <AlertCircle className="h-5 w-5 text-destructive" />;
+      case 'conversation':
+        return <MessageSquare className="h-5 w-5 text-blue-500" />;
+      case 'follow_up':
+        return <Calendar className="h-5 w-5 text-purple-500" />;
+      case 'lead':
+        return <User className="h-5 w-5 text-cyan-500" />;
+      case 'campaign':
+        return <Users className="h-5 w-5 text-indigo-500" />;
+      case 'email':
+        return <Mail className="h-5 w-5 text-yellow-500" />;
+      default:
+        return <Info className="h-5 w-5 text-blue-500" />;
+    }
+  };
 
 export function getStageColor(stage: LeadStage): string {
   switch (stage) {
