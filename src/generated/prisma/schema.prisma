@@ -103,14 +103,13 @@ model AiSuggestion {
   leadId     String
   lead       Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
   suggestion String
-  reasoning  String? // Why AI made this suggestion
   type       String
   status     SuggestionStatus @default(NEW)
   priority   Int              @default(1)
-  context    String? // JSON string storing generation context
   done       Boolean          @default(false)
-  isViewed   Boolean          @default(false)
-  templateId String?
+  isViewed   Boolean          @default(false) // Track if user has seen the suggestion
+  reasoning  String? // Why AI made this suggestion
+  templateId String? // Link to suggested template if applicable
   template   MessageTemplate? @relation(fields: [templateId], references: [id])
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt

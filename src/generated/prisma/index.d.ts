@@ -6804,13 +6804,12 @@ export namespace Prisma {
     id: string | null
     leadId: string | null
     suggestion: string | null
-    reasoning: string | null
     type: string | null
     status: $Enums.SuggestionStatus | null
     priority: number | null
-    context: string | null
     done: boolean | null
     isViewed: boolean | null
+    reasoning: string | null
     templateId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6820,13 +6819,12 @@ export namespace Prisma {
     id: string | null
     leadId: string | null
     suggestion: string | null
-    reasoning: string | null
     type: string | null
     status: $Enums.SuggestionStatus | null
     priority: number | null
-    context: string | null
     done: boolean | null
     isViewed: boolean | null
+    reasoning: string | null
     templateId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6836,13 +6834,12 @@ export namespace Prisma {
     id: number
     leadId: number
     suggestion: number
-    reasoning: number
     type: number
     status: number
     priority: number
-    context: number
     done: number
     isViewed: number
+    reasoning: number
     templateId: number
     createdAt: number
     updatedAt: number
@@ -6862,13 +6859,12 @@ export namespace Prisma {
     id?: true
     leadId?: true
     suggestion?: true
-    reasoning?: true
     type?: true
     status?: true
     priority?: true
-    context?: true
     done?: true
     isViewed?: true
+    reasoning?: true
     templateId?: true
     createdAt?: true
     updatedAt?: true
@@ -6878,13 +6874,12 @@ export namespace Prisma {
     id?: true
     leadId?: true
     suggestion?: true
-    reasoning?: true
     type?: true
     status?: true
     priority?: true
-    context?: true
     done?: true
     isViewed?: true
+    reasoning?: true
     templateId?: true
     createdAt?: true
     updatedAt?: true
@@ -6894,13 +6889,12 @@ export namespace Prisma {
     id?: true
     leadId?: true
     suggestion?: true
-    reasoning?: true
     type?: true
     status?: true
     priority?: true
-    context?: true
     done?: true
     isViewed?: true
+    reasoning?: true
     templateId?: true
     createdAt?: true
     updatedAt?: true
@@ -6997,13 +6991,12 @@ export namespace Prisma {
     id: string
     leadId: string
     suggestion: string
-    reasoning: string | null
     type: string
     status: $Enums.SuggestionStatus
     priority: number
-    context: string | null
     done: boolean
     isViewed: boolean
+    reasoning: string | null
     templateId: string | null
     createdAt: Date
     updatedAt: Date
@@ -7032,13 +7025,12 @@ export namespace Prisma {
     id?: boolean
     leadId?: boolean
     suggestion?: boolean
-    reasoning?: boolean
     type?: boolean
     status?: boolean
     priority?: boolean
-    context?: boolean
     done?: boolean
     isViewed?: boolean
+    reasoning?: boolean
     templateId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7052,19 +7044,18 @@ export namespace Prisma {
     id?: boolean
     leadId?: boolean
     suggestion?: boolean
-    reasoning?: boolean
     type?: boolean
     status?: boolean
     priority?: boolean
-    context?: boolean
     done?: boolean
     isViewed?: boolean
+    reasoning?: boolean
     templateId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AiSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leadId" | "suggestion" | "reasoning" | "type" | "status" | "priority" | "context" | "done" | "isViewed" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["aiSuggestion"]>
+  export type AiSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leadId" | "suggestion" | "type" | "status" | "priority" | "done" | "isViewed" | "reasoning" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["aiSuggestion"]>
   export type AiSuggestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     template?: boolean | AiSuggestion$templateArgs<ExtArgs>
@@ -7080,13 +7071,12 @@ export namespace Prisma {
       id: string
       leadId: string
       suggestion: string
-      reasoning: string | null
       type: string
       status: $Enums.SuggestionStatus
       priority: number
-      context: string | null
       done: boolean
       isViewed: boolean
+      reasoning: string | null
       templateId: string | null
       createdAt: Date
       updatedAt: Date
@@ -7487,13 +7477,12 @@ export namespace Prisma {
     readonly id: FieldRef<"AiSuggestion", 'String'>
     readonly leadId: FieldRef<"AiSuggestion", 'String'>
     readonly suggestion: FieldRef<"AiSuggestion", 'String'>
-    readonly reasoning: FieldRef<"AiSuggestion", 'String'>
     readonly type: FieldRef<"AiSuggestion", 'String'>
     readonly status: FieldRef<"AiSuggestion", 'SuggestionStatus'>
     readonly priority: FieldRef<"AiSuggestion", 'Int'>
-    readonly context: FieldRef<"AiSuggestion", 'String'>
     readonly done: FieldRef<"AiSuggestion", 'Boolean'>
     readonly isViewed: FieldRef<"AiSuggestion", 'Boolean'>
+    readonly reasoning: FieldRef<"AiSuggestion", 'String'>
     readonly templateId: FieldRef<"AiSuggestion", 'String'>
     readonly createdAt: FieldRef<"AiSuggestion", 'DateTime'>
     readonly updatedAt: FieldRef<"AiSuggestion", 'DateTime'>
@@ -15316,13 +15305,12 @@ export namespace Prisma {
     id: 'id',
     leadId: 'leadId',
     suggestion: 'suggestion',
-    reasoning: 'reasoning',
     type: 'type',
     status: 'status',
     priority: 'priority',
-    context: 'context',
     done: 'done',
     isViewed: 'isViewed',
+    reasoning: 'reasoning',
     templateId: 'templateId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -16104,13 +16092,12 @@ export namespace Prisma {
     id?: StringFilter<"AiSuggestion"> | string
     leadId?: StringFilter<"AiSuggestion"> | string
     suggestion?: StringFilter<"AiSuggestion"> | string
-    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     type?: StringFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntFilter<"AiSuggestion"> | number
-    context?: StringNullableFilter<"AiSuggestion"> | string | null
     done?: BoolFilter<"AiSuggestion"> | boolean
     isViewed?: BoolFilter<"AiSuggestion"> | boolean
+    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeFilter<"AiSuggestion"> | Date | string
@@ -16122,13 +16109,12 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
-    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
-    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
+    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16143,13 +16129,12 @@ export namespace Prisma {
     NOT?: AiSuggestionWhereInput | AiSuggestionWhereInput[]
     leadId?: StringFilter<"AiSuggestion"> | string
     suggestion?: StringFilter<"AiSuggestion"> | string
-    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     type?: StringFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntFilter<"AiSuggestion"> | number
-    context?: StringNullableFilter<"AiSuggestion"> | string | null
     done?: BoolFilter<"AiSuggestion"> | boolean
     isViewed?: BoolFilter<"AiSuggestion"> | boolean
+    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeFilter<"AiSuggestion"> | Date | string
@@ -16161,13 +16146,12 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
-    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
-    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
+    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16185,13 +16169,12 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"AiSuggestion"> | string
     leadId?: StringWithAggregatesFilter<"AiSuggestion"> | string
     suggestion?: StringWithAggregatesFilter<"AiSuggestion"> | string
-    reasoning?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     type?: StringWithAggregatesFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusWithAggregatesFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntWithAggregatesFilter<"AiSuggestion"> | number
-    context?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     done?: BoolWithAggregatesFilter<"AiSuggestion"> | boolean
     isViewed?: BoolWithAggregatesFilter<"AiSuggestion"> | boolean
+    reasoning?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableWithAggregatesFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AiSuggestion"> | Date | string
@@ -17207,13 +17190,12 @@ export namespace Prisma {
   export type AiSuggestionCreateInput = {
     id?: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutSuggestionsInput
@@ -17224,13 +17206,12 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17238,13 +17219,12 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutSuggestionsNestedInput
@@ -17254,13 +17234,12 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17270,13 +17249,12 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17284,13 +17262,12 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateManyMutationInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17298,13 +17275,12 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateManyInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18468,13 +18444,12 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
-    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
-    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
+    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18488,13 +18463,12 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
-    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
-    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
+    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18504,13 +18478,12 @@ export namespace Prisma {
     id?: SortOrder
     leadId?: SortOrder
     suggestion?: SortOrder
-    reasoning?: SortOrder
     type?: SortOrder
     status?: SortOrder
     priority?: SortOrder
-    context?: SortOrder
     done?: SortOrder
     isViewed?: SortOrder
+    reasoning?: SortOrder
     templateId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20822,13 +20795,12 @@ export namespace Prisma {
   export type AiSuggestionCreateWithoutLeadInput = {
     id?: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     template?: MessageTemplateCreateNestedOneWithoutSuggestionsInput
@@ -20837,13 +20809,12 @@ export namespace Prisma {
   export type AiSuggestionUncheckedCreateWithoutLeadInput = {
     id?: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21064,13 +21035,12 @@ export namespace Prisma {
     id?: StringFilter<"AiSuggestion"> | string
     leadId?: StringFilter<"AiSuggestion"> | string
     suggestion?: StringFilter<"AiSuggestion"> | string
-    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     type?: StringFilter<"AiSuggestion"> | string
     status?: EnumSuggestionStatusFilter<"AiSuggestion"> | $Enums.SuggestionStatus
     priority?: IntFilter<"AiSuggestion"> | number
-    context?: StringNullableFilter<"AiSuggestion"> | string | null
     done?: BoolFilter<"AiSuggestion"> | boolean
     isViewed?: BoolFilter<"AiSuggestion"> | boolean
+    reasoning?: StringNullableFilter<"AiSuggestion"> | string | null
     templateId?: StringNullableFilter<"AiSuggestion"> | string | null
     createdAt?: DateTimeFilter<"AiSuggestion"> | Date | string
     updatedAt?: DateTimeFilter<"AiSuggestion"> | Date | string
@@ -21850,13 +21820,12 @@ export namespace Prisma {
   export type AiSuggestionCreateWithoutTemplateInput = {
     id?: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutSuggestionsInput
@@ -21866,13 +21835,12 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22722,13 +22690,12 @@ export namespace Prisma {
   export type AiSuggestionCreateManyLeadInput = {
     id?: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     templateId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22790,13 +22757,12 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateWithoutLeadInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: MessageTemplateUpdateOneWithoutSuggestionsNestedInput
@@ -22804,13 +22770,12 @@ export namespace Prisma {
 
   export type AiSuggestionUncheckedUpdateWithoutLeadInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22818,13 +22783,12 @@ export namespace Prisma {
 
   export type AiSuggestionUncheckedUpdateManyWithoutLeadInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     templateId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23031,13 +22995,12 @@ export namespace Prisma {
     id?: string
     leadId: string
     suggestion: string
-    reasoning?: string | null
     type: string
     status?: $Enums.SuggestionStatus
     priority?: number
-    context?: string | null
     done?: boolean
     isViewed?: boolean
+    reasoning?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23056,13 +23019,12 @@ export namespace Prisma {
 
   export type AiSuggestionUpdateWithoutTemplateInput = {
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutSuggestionsNestedInput
@@ -23071,13 +23033,12 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateWithoutTemplateInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23085,13 +23046,12 @@ export namespace Prisma {
   export type AiSuggestionUncheckedUpdateManyWithoutTemplateInput = {
     leadId?: StringFieldUpdateOperationsInput | string
     suggestion?: StringFieldUpdateOperationsInput | string
-    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     status?: EnumSuggestionStatusFieldUpdateOperationsInput | $Enums.SuggestionStatus
     priority?: IntFieldUpdateOperationsInput | number
-    context?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     isViewed?: BoolFieldUpdateOperationsInput | boolean
+    reasoning?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

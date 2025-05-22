@@ -5,7 +5,18 @@ export type LeadSource = 'LINKEDIN' | 'COLD_EMAIL' | 'WEBSITE' | 'REFERRAL' | 'C
 export type SuggestionType = 'NEXT_STEP' | 'EMAIL_TEMPLATE' | 'QUESTION' | 'RESEARCH';
 export type SuggestionStatus = 'NEW' | 'ACCEPTED' | 'REJECTED';
 export type ConversationType = 'NOTE' | 'CALL' | 'EMAIL' | 'MEETING' | 'LINKEDIN' | 'OTHER';
-
+export interface ExportModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  leadFilters?: {
+    search?: string;
+    stage?: LeadStage;
+    source?: LeadSource;
+    tags?: string[];
+    includeArchived?: boolean;
+    includeDeleted?: boolean;
+  };
+}
 export interface Campaign {
   id: string;
   name: string;
@@ -44,7 +55,12 @@ export interface Suggestion {
   updatedAt: string;
   context?: string | null; // Added for storing generation context
 }
-
+export enum ExportType {
+  LEADS = 'LEADS',
+  CONVERSATIONS = 'CONVERSATIONS',
+  CAMPAIGN_DATA = 'CAMPAIGN_DATA',
+  ALL_DATA = 'ALL_DATA'
+}
 export interface Lead {
   id: string;
   name: string;
