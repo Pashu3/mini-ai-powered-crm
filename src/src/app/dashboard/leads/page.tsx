@@ -31,6 +31,7 @@ import { Lead, LeadStage, LeadSource } from "@/types/lead";
 import KanbanView from "@/components/leads/KanbanView";
 import DeleteLeadConfirmation from "@/components/leads/DeleteLeadConfirmation";
 import ExportModal from "@/src/components/ExportModal";
+
 interface LeadResponse {
   leads: Lead[];
   total: number;
