@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
-  ArrowLeft, 
-  Save, 
-  Search, 
-  UserPlus, 
-  Loader2, 
-  AlertCircle, 
+import {
+  ArrowLeft,
+  Save,
+  Search,
+  UserPlus,
+  Loader2,
+  AlertCircle,
   Check,
   Users,
   Mail,
@@ -38,7 +38,7 @@ export default function AddLeadsToCampaignPage() {
   const router = useRouter();
   const params = useParams();
   const campaignId = params.campaignId as string;
-  
+
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,24 +50,24 @@ export default function AddLeadsToCampaignPage() {
   const [filter, setFilter] = useState<string>('all');
   const [showExistingInCampaign, setShowExistingInCampaign] = useState<boolean>(false);
 
-  
+
   // Fetch campaign details
   useEffect(() => {
     async function fetchCampaign() {
       try {
         setCampaignLoading(true);
-        
+
         const response = await fetch(`/api/campaigns/${campaignId}`);
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch campaign: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        const campaignData = data.success && data.data 
-          ? data.data 
+        const campaignData = data.success && data.data
+          ? data.data
           : data;
-        
+
         setCampaign(campaignData);
       } catch (err) {
         console.error("Error fetching campaign:", err);
@@ -76,52 +76,52 @@ export default function AddLeadsToCampaignPage() {
         setCampaignLoading(false);
       }
     }
-    
+
     fetchCampaign();
   }, [campaignId]);
-  
-  // Fetch available leads
-// Update the fetchLeads function:
 
-useEffect(() => {
-  async function fetchLeads() {
-    try {
-      setLoading(true);
-      
-      const response = await fetch('/api/leads?fields=id,name,company,email,stage,campaignId,tags');
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch leads: ${response.status}`);
+  // Fetch available leads
+  // Update the fetchLeads function:
+
+  useEffect(() => {
+    async function fetchLeads() {
+      try {
+        setLoading(true);
+
+        const response = await fetch('/api/leads?fields=id,name,company,email,stage,campaignId,tags');
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch leads: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Correctly access the leads array from the nested structure
+        let leadsData;
+        if (data.success && data.data && data.data.leads) {
+          leadsData = data.data.leads; // Properly access leads inside data.data.leads
+        } else if (Array.isArray(data)) {
+          leadsData = data;
+        } else if (Array.isArray(data.data)) {
+          leadsData = data.data;
+        } else {
+          leadsData = [];
+        }
+
+        // Filter out leads that are already in a campaign
+        const availableLeads = leadsData.filter((lead: Lead) => !lead.campaignId);
+        setLeads(availableLeads);
+      } catch (err) {
+        console.error("Error fetching leads:", err);
+        setError("Failed to load leads. Please try again.");
+      } finally {
+        setLoading(false);
       }
-      
-      const data = await response.json();
-      
-      // Correctly access the leads array from the nested structure
-      let leadsData;
-      if (data.success && data.data && data.data.leads) {
-        leadsData = data.data.leads; // Properly access leads inside data.data.leads
-      } else if (Array.isArray(data)) {
-        leadsData = data;
-      } else if (Array.isArray(data.data)) {
-        leadsData = data.data;
-      } else {
-        leadsData = [];
-      }
-      
-      // Filter out leads that are already in a campaign
-      const availableLeads = leadsData.filter((lead: Lead) => !lead.campaignId);
-      setLeads(availableLeads);
-    } catch (err) {
-      console.error("Error fetching leads:", err);
-      setError("Failed to load leads. Please try again.");
-    } finally {
-      setLoading(false);
     }
-  }
-  
-  fetchLeads();
-}, []);
-  
+
+    fetchLeads();
+  }, []);
+
   const handleToggleSelectAll = () => {
     if (selectedLeadIds.length === filteredLeads.length) {
       // Deselect all
@@ -131,7 +131,7 @@ useEffect(() => {
       setSelectedLeadIds(filteredLeads.map(lead => lead.id));
     }
   };
-  
+
   const handleToggleLead = (leadId: string) => {
     if (selectedLeadIds.includes(leadId)) {
       // Remove lead from selection
@@ -141,17 +141,17 @@ useEffect(() => {
       setSelectedLeadIds([...selectedLeadIds, leadId]);
     }
   };
-  
+
   const handleAddLeads = async () => {
     if (selectedLeadIds.length === 0) {
       setError("Please select at least one lead");
       return;
     }
-    
+
     try {
       setIsSaving(true);
       setError(null);
-      
+
       const response = await fetch(`/api/campaigns/${campaignId}/leads`, {
         method: 'POST',
         headers: {
@@ -159,12 +159,12 @@ useEffect(() => {
         },
         body: JSON.stringify({ leadIds: selectedLeadIds }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to add leads to campaign');
       }
-      
+
       router.push(`/dashboard/campaigns/${campaignId}`);
     } catch (err) {
       console.error("Error adding leads to campaign:", err);
@@ -173,7 +173,7 @@ useEffect(() => {
       setIsSaving(false);
     }
   };
-  
+
   // Get the stage color based on stage name
   const getStageColor = (stage: string) => {
     switch (stage.toUpperCase()) {
@@ -199,29 +199,29 @@ useEffect(() => {
   // Filter leads based on search query and filters
   const getFilteredLeads = () => {
     let filtered = leads;
-    
+
     // Apply search query filter
     if (searchQuery) {
-      filtered = filtered.filter(lead => 
-        lead.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      filtered = filtered.filter(lead =>
+        lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         lead.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         lead.email.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
+
     // Apply stage filter
     if (filter !== 'all') {
       filtered = filtered.filter(lead => lead.stage.toUpperCase() === filter);
     }
-    
+
     return filtered;
   };
-  
+
   const filteredLeads = getFilteredLeads();
 
   // Group leads by stages for organization
   const stages = ['NEW', 'CONTACTED', 'QUALIFIED', 'PROPOSAL', 'NEGOTIATION', 'CONVERTED', 'LOST'];
-  
+
   if (campaignLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -229,7 +229,7 @@ useEffect(() => {
       </div>
     );
   }
-  
+
   if (!campaign) {
     return (
       <div className="bg-destructive/10 text-destructive p-6 rounded-lg border border-destructive/20">
@@ -237,7 +237,7 @@ useEffect(() => {
         <h3 className="font-medium text-lg">Error loading campaign</h3>
         <p>{error || "Campaign not found"}</p>
         <div className="flex gap-3 mt-4">
-          <Link 
+          <Link
             href="/dashboard/campaigns"
             className="px-4 py-2 bg-background border border-input rounded-md"
           >
@@ -247,7 +247,7 @@ useEffect(() => {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -265,7 +265,7 @@ useEffect(() => {
             <ArrowLeft size={20} />
             <span className="sr-only">Back to campaign</span>
           </Link>
-          
+
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Add Leads to Campaign</h1>
             <p className="text-muted-foreground">
@@ -273,7 +273,7 @@ useEffect(() => {
             </p>
           </div>
         </div>
-        
+
         <button
           onClick={handleAddLeads}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2"
@@ -292,7 +292,7 @@ useEffect(() => {
           )}
         </button>
       </div>
-      
+
       {/* Error message */}
       {error && (
         <div className="bg-destructive/10 text-destructive p-4 rounded-md flex items-center gap-2">
@@ -300,7 +300,7 @@ useEffect(() => {
           {error}
         </div>
       )}
-      
+
       {/* Search and Filter */}
       <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
         <div className="relative flex-1">
@@ -313,22 +313,26 @@ useEffect(() => {
             className="w-full pl-9 pr-4 py-2 border border-input rounded-md"
           />
         </div>
-        
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Filter:</span>
+
+        <div className="relative inline-block">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="px-2 py-1.5 border border-input rounded-md text-sm"
+            className="appearance-none w-full px-3 py-2 bg-background border border-input rounded-md text-sm pr-8 focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             <option value="all">All Stages</option>
             {stages.map((stage) => (
               <option key={stage} value={stage}>{stage.charAt(0) + stage.slice(1).toLowerCase()}</option>
             ))}
           </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+            <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
+          </div>
         </div>
       </div>
-      
+
       {/* Leads Table */}
       <div className="border border-border rounded-lg overflow-hidden">
         {loading ? (
@@ -371,7 +375,7 @@ useEffect(() => {
         ) : (
           <div>
             <div className="border-b border-border">
-              <div className="grid grid-cols-[auto,1fr,1fr,1fr,auto] gap-4 p-4 bg-muted/50 text-sm font-medium">
+              <div className="grid grid-cols-2 md:grid-cols-[auto,1fr,1fr,1fr,auto] gap-4 p-4 bg-muted/50 text-sm font-medium">
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -386,54 +390,50 @@ useEffect(() => {
                 <div>Stage</div>
               </div>
             </div>
-            
+
             <div>
-          {filteredLeads.map((lead) => (
-  <div
-    key={lead.id || `lead-${Math.random()}`}
-    className={`grid grid-cols-[auto,1fr,1fr,1fr,auto] gap-4 p-4 border-b border-border hover:bg-muted/30 transition-colors ${
-      selectedLeadIds.includes(lead.id) ? 'bg-primary/5' : ''
-    }`}
-  >
-    <div className="flex items-center">
-      <input
-        type="checkbox"
-        checked={selectedLeadIds.includes(lead.id)}
-        onChange={() => handleToggleLead(lead.id)}
-        className="h-4 w-4 rounded border-gray-300"
-      />
-    </div>
-    <div className="flex items-center">
-      <span className="font-medium">{lead.name || 'No name'}</span>
-    </div>
-    <div className="flex items-center gap-1.5">
-      <Building size={14} className="text-muted-foreground" />
-      {lead.company || 'No company'}
-    </div>
-    <div className="flex items-center gap-1.5">
-      <Mail size={14} className="text-muted-foreground" />
-      <span className="text-sm truncate">{lead.email || 'No email'}</span>
-    </div>
-    <div>
-      {lead.stage ? (
-        <span className={`text-xs px-2 py-1 rounded-full border ${getStageColor(lead.stage)}`}>
-          {lead.stage.charAt(0) + lead.stage.slice(1).toLowerCase()}
-        </span>
-      ) : (
-        <span className="text-xs px-2 py-1 rounded-full border text-gray-600 bg-gray-50 border-gray-200">
-          No stage
-        </span>
-      )}
-    </div>
-  </div>
-))}
+              {filteredLeads.map((lead) => (
+                <div className={`grid grid-cols-2 md:grid-cols-[auto,1fr,1fr,1fr,auto] gap-4 p-4 border-b border-border hover:bg-muted/30 transition-colors ${selectedLeadIds.includes(lead.id) ? 'bg-primary/5' : ''
+                  }`}>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedLeadIds.includes(lead.id)}
+                      onChange={() => handleToggleLead(lead.id)}
+                      className="h-4 w-4 rounded border-gray-300"
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-medium">{lead.name || 'No name'}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Building size={14} className="text-muted-foreground" />
+                    {lead.company || 'No company'}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Mail size={14} className="text-muted-foreground" />
+                    <span className="text-sm truncate">{lead.email || 'No email'}</span>
+                  </div>
+                  <div>
+                    {lead.stage ? (
+                      <span className={`text-xs px-2 py-1 rounded-full border ${getStageColor(lead.stage)}`}>
+                        {lead.stage.charAt(0) + lead.stage.slice(1).toLowerCase()}
+                      </span>
+                    ) : (
+                      <span className="text-xs px-2 py-1 rounded-full border text-gray-600 bg-gray-50 border-gray-200">
+                        No stage
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
       </div>
-      
+
       {selectedLeadIds.length > 0 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 inset-x-0 mx-auto w-full max-w-3xl px-4"
