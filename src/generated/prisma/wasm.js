@@ -182,12 +182,13 @@ exports.Prisma.AiSuggestionScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
   suggestion: 'suggestion',
+  reasoning: 'reasoning',
   type: 'type',
   status: 'status',
   priority: 'priority',
+  context: 'context',
   done: 'done',
   isViewed: 'isViewed',
-  reasoning: 'reasoning',
   templateId: 'templateId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -260,20 +261,10 @@ exports.Prisma.NotificationScalarFieldEnum = {
   message: 'message',
   type: 'type',
   isRead: 'isRead',
-  relatedId: 'relatedId',
-  relatedType: 'relatedType',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ExportJobScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  filters: 'filters',
-  status: 'status',
-  url: 'url',
   createdAt: 'createdAt',
-  completedAt: 'completedAt'
+  updatedAt: 'updatedAt',
+  relatedId: 'relatedId',
+  relatedType: 'relatedType'
 };
 
 exports.Prisma.SortOrder = {
@@ -362,20 +353,6 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   SYSTEM: 'SYSTEM'
 };
 
-exports.ExportType = exports.$Enums.ExportType = {
-  LEADS: 'LEADS',
-  CONVERSATIONS: 'CONVERSATIONS',
-  CAMPAIGN_DATA: 'CAMPAIGN_DATA',
-  ALL_DATA: 'ALL_DATA'
-};
-
-exports.JobStatus = exports.$Enums.JobStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
-
 exports.Prisma.ModelName = {
   PasswordReset: 'PasswordReset',
   User: 'User',
@@ -387,8 +364,7 @@ exports.Prisma.ModelName = {
   MessageTemplate: 'MessageTemplate',
   DashboardMetric: 'DashboardMetric',
   Task: 'Task',
-  Notification: 'Notification',
-  ExportJob: 'ExportJob'
+  Notification: 'Notification'
 };
 
 /**

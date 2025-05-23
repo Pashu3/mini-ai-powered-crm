@@ -5,13 +5,17 @@ import { authOptions } from '@/lib/authOptions';
 import prisma from '@/lib/prisma';
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils';
 
-type Params = { params: { suggestionId: string } };
+type Params = Promise<{
+  id: string;
+  suggestionId: string;
+}>;
 
 export async function PATCH(
   req: NextRequest,
-  { params }: Params
-) {
+  context: { params: Params }) {
   try {
+    const params = await context.params;
+    const leadId = params.id;
     const suggestionId = params.suggestionId;
     
     const session = await getServerSession(authOptions);

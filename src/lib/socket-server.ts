@@ -1,13 +1,11 @@
 import { Server as SocketIOServer } from 'socket.io';
 import { getToken } from 'next-auth/jwt';
 
-// Store active connections by user ID
 const userConnections = new Map<string, string[]>();
 
 export const initSocketConnection = (io: SocketIOServer) => {
   io.on('connection', async (socket) => {
     try {
-      // We need to authenticate the socket connection
       const token = socket.handshake.auth.token;
       
       if (!token) {
@@ -16,10 +14,8 @@ export const initSocketConnection = (io: SocketIOServer) => {
         return;
       }
 
-      // Verify token (simplified - in production you'd verify against next-auth)
       let userId: string;
       try {
-        // Extract user ID from token (this is simplified)
         const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
         userId = payload.sub || payload.id;
         
@@ -45,6 +41,18 @@ export const initSocketConnection = (io: SocketIOServer) => {
       userConnections.get(userId)?.push(socket.id);
       
       console.log(`User ${userId} connected with socket ${socket.id}`);
+
+      // Listen for client events
+      socket.on('request_notification_count', async () => {
+        // User is requesting their current notification count
+        try {
+          const { getUnreadNotificationsCount } = await import('@/services/notification-service');
+          const count = await getUnreadNotificationsCount(userId);
+          socket.emit('notification_count_update', { count });
+        } catch (error) {
+          console.error('Error sending notification count:', error);
+        }
+      });
 
       // Clean up on disconnect
       socket.on('disconnect', () => {
@@ -77,7 +85,7 @@ export const emitToUser = (userId: string, event: string, data: any) => {
   }
   
   global.socketIoServer.to(`user:${userId}`).emit(event, data);
-  console.log(`Emitted ${event} to user ${userId}`);
+  console.log(`Emitted ${event} to user ${userId}`, data);
 };
 
 // Helper to emit events to all users
@@ -89,4 +97,14 @@ export const emitToAll = (event: string, data: any) => {
   
   global.socketIoServer.emit(event, data);
   console.log(`Broadcasted ${event} to all users`);
+};
+
+// Check if a user is currently connected
+export const isUserConnected = (userId: string) => {
+  return userConnections.has(userId) && userConnections.get(userId)!.length > 0;
+};
+
+// Get count of connected users
+export const getConnectedUsersCount = () => {
+  return userConnections.size;
 };

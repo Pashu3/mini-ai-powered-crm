@@ -32,9 +32,14 @@ export async function GET(req: NextRequest) {
       return successResponse({ count });
     }
     
-    // Otherwise get notifications
+    // Check if requesting unread only
+    const unreadOnly = searchParams.get('unreadOnly') === 'true';
+    
+    // Get limit parameter
     const limit = Number(searchParams.get('limit')) || 20;
-    const notifications = await getNotifications(userId, limit);
+    
+    // Get notifications with proper filtering
+    const notifications = await getNotifications(userId, limit, unreadOnly);
     
     return successResponse(notifications);
   } catch (error: any) {

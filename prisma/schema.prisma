@@ -28,8 +28,8 @@ model User {
   notifications   Notification[]
   campaigns       Campaign[]       
   templates       MessageTemplate[] 
-    tasks           Task[]           // Add this relation
-
+  tasks           Task[]           
+  
   preferences     Json?            
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -45,28 +45,25 @@ model Lead {
   position         String?
   notes            String?
   stage            LeadStage      @default(NEW)
-  source           LeadSource?    // Track where the lead came from
-  confidence       Int?           @default(50) // Confidence score for closing (0-100)
-  priority         Int            @default(2)  // Priority level (1-5)
-  isArchived       Boolean        @default(false) // Soft delete/archive flag
-  isDeleted        Boolean        @default(false) // Soft delete flag
+  source           LeadSource?    
+  confidence       Int?           @default(50) 
+  priority         Int            @default(2)  
+  isArchived       Boolean        @default(false) 
+  isDeleted        Boolean        @default(false) 
   tags             String[]
-  score            Int?           // Lead scoring based on engagement
+  score            Int?           
   
-  // User relationships
-  userId           String?        // Creator/owner of the lead
+  userId           String?        
   user             User?          @relation("LeadOwner", fields: [userId], references: [id])
-  assignedToId     String?        // Person assigned to work the lead
+  assignedToId     String?        
   assignedTo       User?          @relation("LeadAssignee", fields: [assignedToId], references: [id])
   
-  // Campaign relationship
   campaignId       String?
   campaign         Campaign?      @relation(fields: [campaignId], references: [id])
   
-  // Time and tracking fields
-  timezone         String?        // Lead's timezone for scheduling
-  region           String?        // Geographic region/territory
-  address          Json?          // Structured address information
+  timezone         String?        
+  region           String?        
+  address          Json?          
   lastActivity     DateTime?
   lastContactedDate DateTime?
   nextContactDate  DateTime?
@@ -184,29 +181,22 @@ model Task {
   updatedAt   DateTime   @updatedAt
 }
 
+
+
 model Notification {
-  id          String           @id @default(uuid()) @map("_id")
+  id          String      @id @default(uuid()) @map("_id")
   userId      String
-  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   message     String
   type        NotificationType
-  isRead      Boolean          @default(false)
-  relatedId   String?          // ID of related entity (lead, task, etc.)
-  relatedType String?          // Type of related entity
-  createdAt   DateTime         @default(now())
+  isRead      Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  relatedId   String?
+  relatedType String?
+  user        User        @relation(fields: [userId], references: [id])
 }
 
-model ExportJob {
-  id          String      @id @default(uuid()) @map("_id") 
-  userId      String
-  type        ExportType
-  filters     Json?       // Search/filter criteria for export
-  status      JobStatus   @default(PENDING)
-  url         String?     // Download URL when complete
-  createdAt   DateTime    @default(now())
-  completedAt DateTime?
-}
 
 enum UserRole {
   ADMIN
@@ -272,12 +262,7 @@ enum NotificationType {
   SYSTEM
 }
 
-enum ExportType {
-  LEADS
-  CONVERSATIONS
-  CAMPAIGN_DATA
-  ALL_DATA
-}
+
 
 enum JobStatus {
   PENDING

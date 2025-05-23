@@ -58,11 +58,6 @@ export function SidebarNav({
       icon: FileText,
     },
     {
-      title: "Analytics",
-      href: "/dashboard/analytics",
-      icon: BarChart3,
-    },
-    {
       title: "Settings",
       href: "/dashboard/settings",
       icon: Settings,
@@ -140,7 +135,7 @@ export function SidebarNav({
         )}
       </div>
       {/* Navigation menu */}
-      <div className="flex-1 overflow-auto py-3">
+      <div className="flex-1 overflow-auto py-3 mt-3">
         <nav className="grid gap-1.5 px-3">
           {items.map((item, index) => (
             <Link

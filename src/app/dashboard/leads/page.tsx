@@ -30,7 +30,7 @@ import { getStageColor, getSourceColor } from "@/utils/styleHelpers";
 import { Lead, LeadStage, LeadSource } from "@/types/lead";
 import KanbanView from "@/components/leads/KanbanView";
 import DeleteLeadConfirmation from "@/components/leads/DeleteLeadConfirmation";
-import ExportModal from "@/components/ExportModal";
+
 interface LeadResponse {
   leads: Lead[];
   total: number;
@@ -71,7 +71,7 @@ function LeadsContent() {
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
-  const [showExportModal, setShowExportModal] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
 
   const [searchTerm, setSearchTerm] = useState<string>(searchParams.get('search') || '');
@@ -319,6 +319,58 @@ function LeadsContent() {
     fetchLeads();
   }, [fetchLeads]);
 
+  const handleExport = async () => {
+    try {
+      setIsExporting(true);
+
+      // Build query parameters for export
+      const params = new URLSearchParams();
+
+      if (searchTerm) params.set('search', searchTerm);
+      if (selectedStage) params.set('stage', selectedStage);
+      if (selectedSource) params.set('source', selectedSource);
+      if (selectedTags.length > 0) params.set('tags', selectedTags.join(','));
+      if (minConfidence !== undefined) params.set('confidence', minConfidence.toString());
+      if (priority !== undefined) params.set('priority', priority.toString());
+      if (region) params.set('region', region);
+      if (assignedToId) params.set('assignedToId', assignedToId);
+      if (includeArchived) params.set('includeArchived', 'true');
+      if (includeDeleted) params.set('includeDeleted', 'true');
+
+      // Create URL with query parameters
+      const url = `/api/leads/export?${params.toString()}`;
+
+      // Fetch the CSV data
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Failed to export leads');
+      }
+
+      // Get filename from Content-Disposition header or use default
+      const contentDisposition = response.headers.get('Content-Disposition') || '';
+      const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+      const filename = filenameMatch ? filenameMatch[1] : 'leads-export.csv';
+
+      // Create download link
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (error) {
+      console.error('Export error:', error);
+      // You can add toast notification here
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+
   // Clear all filters
   const clearAllFilters = () => {
     updateFilters({
@@ -491,13 +543,17 @@ function LeadsContent() {
               )}
             </AnimatePresence>
           </div>
-          
           <button
-            onClick={() => setShowExportModal(true)}
+            onClick={handleExport}
+            disabled={isExporting}
             className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-md flex items-center gap-2 transition-colors shadow-sm"
           >
-            <FileDown size={16} />
-            <span>Export</span>
+            {isExporting ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <FileDown size={16} />
+            )}
+            <span>{isExporting ? 'Exporting...' : 'Export'}</span>
           </button>
 
           <Link
@@ -1146,18 +1202,7 @@ function LeadsContent() {
           />
         )}
       </motion.div>
-      <ExportModal
-        isOpen={showExportModal}
-        onClose={() => setShowExportModal(false)}
-        leadFilters={{
-          search: searchTerm,
-          stage: selectedStage,
-          source: selectedSource,
-          tags: selectedTags,
-          includeArchived,
-          includeDeleted
-        }}
-      />
+
       {deleteLeadData && (
         <DeleteLeadConfirmation
           leadId={deleteLeadData.id}

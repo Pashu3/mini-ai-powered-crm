@@ -15,7 +15,6 @@ import {
 import { useToast } from "@/components/ui/toast/ToastContext";
 import { ExportType, ExportModalProps } from "../types/lead";
 
-
 export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModalProps) {
   const { toast } = useToast();
   const [exportType, setExportType] = useState<ExportType>(ExportType.LEADS);
@@ -82,7 +81,6 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 overflow-hidden">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -92,24 +90,24 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
           />
           
           {/* Modal */}
-          <div className="fixed inset-0 flex items-center justify-center">
+          <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6 md:p-8">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="bg-card border border-border rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden"
+              className="bg-card border border-border rounded-lg shadow-lg w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="p-4 border-b border-border flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FileDown size={20} />
+              {/* Header - Fixed at top */}
+              <div className="p-5 border-b border-border flex items-center justify-between sticky top-0 bg-card z-10">
+                <div className="flex items-center gap-2.5">
+                  <FileDown size={22} />
                   <h2 className="font-semibold text-lg">Export Data</h2>
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-md hover:bg-primary/10 transition-colors"
+                  className="p-2 rounded-md hover:bg-primary/10 transition-colors"
                   aria-label="Close modal"
                 >
                   <X size={18} />
@@ -117,18 +115,18 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
               </div>
               
               {exportStarted ? (
-                <div className="p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-4">
-                    <Check size={24} className="text-success" />
+                <div className="p-8 text-center">
+                  <div className="w-14 h-14 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-5">
+                    <Check size={28} className="text-success" />
                   </div>
-                  <h3 className="text-lg font-medium mb-2">Export Started</h3>
-                  <p className="text-muted-foreground mb-6">
+                  <h3 className="text-xl font-medium mb-3">Export Started</h3>
+                  <p className="text-muted-foreground mb-8 max-w-md mx-auto">
                     Your export has been started and will be processed in the background. 
                     You can check the status in your export history.
                   </p>
                   <button
                     onClick={() => window.location.href = `/dashboard/exports/${jobId}`}
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2 mx-auto hover:bg-primary/90 transition-colors"
+                    className="px-5 py-2.5 bg-primary text-primary-foreground rounded-md flex items-center gap-2 mx-auto hover:bg-primary/90 transition-colors"
                   >
                     <FileDown size={16} />
                     <span>View Export Status</span>
@@ -136,17 +134,17 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                 </div>
               ) : (
                 <>
-                  {/* Content */}
-                  <div className="p-6">
-                    <p className="text-muted-foreground mb-4">
+                  {/* Scrollable content area */}
+                  <div className="flex-1 overflow-y-auto p-5 md:p-6">
+                    <p className="text-muted-foreground mb-6">
                       Select the type of data you want to export. The exported file will be available for download in CSV format.
                     </p>
                     
-                    <fieldset className="space-y-4 mb-6">
-                      <legend className="font-medium mb-2">Export Type</legend>
+                    <fieldset className="space-y-5 mb-8">
+                      <legend className="font-medium text-base mb-3">Export Type</legend>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <label className={`border rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-colors ${exportType === ExportType.LEADS ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label className={`border rounded-lg p-4 flex items-center gap-4 cursor-pointer transition-colors ${exportType === ExportType.LEADS ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
                           <input
                             type="radio"
                             name="exportType"
@@ -155,16 +153,16 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                             onChange={() => setExportType(ExportType.LEADS)}
                             className="sr-only"
                           />
-                          <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
-                            <FileSpreadsheet size={18} className="text-primary" />
+                          <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <FileSpreadsheet size={20} className="text-primary" />
                           </div>
                           <div>
-                            <span className="font-medium block">Leads</span>
+                            <span className="font-medium block mb-1">Leads</span>
                             <span className="text-xs text-muted-foreground">Contact & company info</span>
                           </div>
                         </label>
                         
-                        <label className={`border rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-colors ${exportType === ExportType.CONVERSATIONS ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
+                        <label className={`border rounded-lg p-4 flex items-center gap-4 cursor-pointer transition-colors ${exportType === ExportType.CONVERSATIONS ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
                           <input
                             type="radio"
                             name="exportType"
@@ -173,16 +171,16 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                             onChange={() => setExportType(ExportType.CONVERSATIONS)}
                             className="sr-only"
                           />
-                          <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
-                            <MessageSquare size={18} className="text-primary" />
+                          <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <MessageSquare size={20} className="text-primary" />
                           </div>
                           <div>
-                            <span className="font-medium block">Conversations</span>
+                            <span className="font-medium block mb-1">Conversations</span>
                             <span className="text-xs text-muted-foreground">Call & email logs</span>
                           </div>
                         </label>
                         
-                        <label className={`border rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-colors ${exportType === ExportType.CAMPAIGN_DATA ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
+                        <label className={`border rounded-lg p-4 flex items-center gap-4 cursor-pointer transition-colors ${exportType === ExportType.CAMPAIGN_DATA ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
                           <input
                             type="radio"
                             name="exportType"
@@ -191,16 +189,16 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                             onChange={() => setExportType(ExportType.CAMPAIGN_DATA)}
                             className="sr-only"
                           />
-                          <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
-                            <Package size={18} className="text-primary" />
+                          <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Package size={20} className="text-primary" />
                           </div>
                           <div>
-                            <span className="font-medium block">Campaigns</span>
+                            <span className="font-medium block mb-1">Campaigns</span>
                             <span className="text-xs text-muted-foreground">Campaign performance</span>
                           </div>
                         </label>
                         
-                        <label className={`border rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-colors ${exportType === ExportType.ALL_DATA ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
+                        <label className={`border rounded-lg p-4 flex items-center gap-4 cursor-pointer transition-colors ${exportType === ExportType.ALL_DATA ? 'border-primary bg-primary/5' : 'border-border hover:bg-primary/5'}`}>
                           <input
                             type="radio"
                             name="exportType"
@@ -209,11 +207,11 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                             onChange={() => setExportType(ExportType.ALL_DATA)}
                             className="sr-only"
                           />
-                          <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
-                            <Database size={18} className="text-primary" />
+                          <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Database size={20} className="text-primary" />
                           </div>
                           <div>
-                            <span className="font-medium block">All Data</span>
+                            <span className="font-medium block mb-1">All Data</span>
                             <span className="text-xs text-muted-foreground">Complete export</span>
                           </div>
                         </label>
@@ -222,17 +220,19 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                     
                     {/* Filter options - show only for Leads export */}
                     {exportType === ExportType.LEADS && leadFilters && (
-                      <div className="mb-6">
-                        <label className="flex items-center gap-2 cursor-pointer">
+                      <div className="mb-8 p-5 border border-border rounded-lg">
+                        <h3 className="font-medium mb-4">Filter Options</h3>
+                        
+                        <label className="flex items-center gap-3 cursor-pointer mb-4">
                           <input
                             type="checkbox"
                             checked={includeCurrentFilters}
                             onChange={() => setIncludeCurrentFilters(!includeCurrentFilters)}
-                            className="rounded text-primary focus:ring-primary"
+                            className="rounded text-primary focus:ring-primary h-4 w-4"
                           />
-                          <span>
-                            Apply current filters
-                            <span className="block text-xs text-muted-foreground">
+                          <div>
+                            <span className="font-medium">Apply current filters</span>
+                            <span className="block text-sm text-muted-foreground mt-0.5">
                               {Object.entries(leadFilters).some(([_, value]) => 
                                 value !== undefined && 
                                 (Array.isArray(value) ? value.length > 0 : true)
@@ -240,48 +240,66 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                                 'Export will include only filtered leads' :
                                 'No active filters - all leads will be exported'}
                             </span>
-                          </span>
+                          </div>
                         </label>
                         
                         {includeCurrentFilters && (
-                          <div className="mt-3 p-3 bg-muted/50 rounded-md text-xs space-y-1">
+                          <div className="mt-4 p-4 bg-muted/50 rounded-md text-sm space-y-2 border border-muted">
+                            <h4 className="font-medium mb-2 text-muted-foreground">Applied Filters:</h4>
                             {leadFilters.stage && (
-                              <div>
-                                <span className="font-medium">Stage:</span> {leadFilters.stage}
+                              <div className="flex">
+                                <span className="font-medium w-20">Stage:</span> 
+                                <span>{leadFilters.stage}</span>
                               </div>
                             )}
                             {leadFilters.source && (
-                              <div>
-                                <span className="font-medium">Source:</span> {leadFilters.source}
+                              <div className="flex">
+                                <span className="font-medium w-20">Source:</span> 
+                                <span>{leadFilters.source}</span>
                               </div>
                             )}
                             {leadFilters.tags && leadFilters.tags.length > 0 && (
-                              <div>
-                                <span className="font-medium">Tags:</span> {leadFilters.tags.join(', ')}
+                              <div className="flex">
+                                <span className="font-medium w-20">Tags:</span> 
+                                <span>{leadFilters.tags.join(', ')}</span>
                               </div>
                             )}
                             {leadFilters.search && (
-                              <div>
-                                <span className="font-medium">Search:</span> "{leadFilters.search}"
+                              <div className="flex">
+                                <span className="font-medium w-20">Search:</span> 
+                                <span>"{leadFilters.search}"</span>
                               </div>
                             )}
                             {leadFilters.includeArchived && (
-                              <div>Including archived leads</div>
+                              <div className="flex items-center text-muted-foreground">
+                                <Check size={14} className="mr-2" />
+                                <span>Including archived leads</span>
+                              </div>
                             )}
                             {leadFilters.includeDeleted && (
-                              <div>Including deleted leads</div>
+                              <div className="flex items-center text-muted-foreground">
+                                <Check size={14} className="mr-2" />
+                                <span>Including deleted leads</span>
+                              </div>
                             )}
                           </div>
                         )}
                       </div>
                     )}
+
+                    <div className="mt-6 text-sm text-muted-foreground">
+                      <p>
+                        Exports are processed in the background and may take a few minutes to complete 
+                        depending on the amount of data. You'll be notified when your export is ready.
+                      </p>
+                    </div>
                   </div>
                   
-                  {/* Footer */}
-                  <div className="p-4 border-t border-border bg-muted/30 flex justify-end gap-3">
+                  {/* Footer - Fixed at bottom */}
+                  <div className="p-5 border-t border-border bg-muted/30 flex justify-end gap-3 sticky bottom-0">
                     <button
                       onClick={onClose}
-                      className="px-4 py-2 bg-muted text-muted-foreground rounded-md hover:bg-muted/70 transition-colors"
+                      className="px-4 py-2.5 bg-muted text-muted-foreground rounded-md hover:bg-muted/70 transition-colors"
                     >
                       Cancel
                     </button>
@@ -289,7 +307,7 @@ export default function ExportModal({ isOpen, onClose, leadFilters }: ExportModa
                     <button
                       onClick={handleStartExport}
                       disabled={isLoading}
-                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70"
+                      className="px-5 py-2.5 bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70"
                     >
                       {isLoading ? (
                         <>

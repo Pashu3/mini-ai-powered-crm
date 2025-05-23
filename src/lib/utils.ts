@@ -41,3 +41,5 @@ export function generateSlug(text: string): string {
     return source.replace('_', ' ').charAt(0) + source.replace('_', ' ').slice(1).toLowerCase();
   };
 
+  
+

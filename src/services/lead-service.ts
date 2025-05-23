@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import { cacheDelete, cacheDeletePattern, cacheGet, cacheSet } from '@/lib/redis';
 import { getNextStepSuggestion } from '@/lib/ai-service';
 import { Lead, LeadStage, LeadSource, Prisma } from '@/generated/prisma';
+import { Parser } from 'json2csv';
 
 const CACHE_TTL = 300; 
 
@@ -670,4 +671,165 @@ export async function updateLeadStage(id: string, userId: string, stage: LeadSta
   }
   
   return updatedLead;
+}
+
+export async function exportLeadsToCsv(
+  userId: string,
+  filters: {
+    search?: string;
+    stage?: LeadStage;
+    source?: LeadSource;
+    tags?: string[];
+    priority?: number;
+    confidence?: number;
+    assignedToId?: string;
+    region?: string;
+    includeArchived?: boolean;
+    includeDeleted?: boolean;
+  } = {}
+): Promise<{ csv: string; filename: string }> {
+  // Build query filters similar to getLeads function
+  const where: Prisma.LeadWhereInput = { 
+    OR: [
+      { userId: userId },
+      { assignedToId: userId }
+    ]
+  };
+  
+  // Handle archived/deleted status
+  if (!filters.includeArchived) {
+    where.isArchived = false;
+  }
+  
+  if (!filters.includeDeleted) {
+    where.isDeleted = false;
+  }
+  
+  if (filters.search) {
+    where.OR = [
+      { name: { contains: filters.search, mode: 'insensitive' } },
+      { company: { contains: filters.search, mode: 'insensitive' } },
+      { email: { contains: filters.search, mode: 'insensitive' } },
+      { region: { contains: filters.search, mode: 'insensitive' } },
+    ];
+  }
+  
+  if (filters.stage) {
+    where.stage = filters.stage;
+  }
+  
+  if (filters.source) {
+    where.source = filters.source;
+  }
+  
+  if (filters.tags && filters.tags.length > 0) {
+    where.tags = { hasSome: filters.tags };
+  }
+  
+  if (filters.priority) {
+    where.priority = filters.priority;
+  }
+  
+  if (filters.confidence) {
+    where.confidence = {
+      gte: filters.confidence
+    };
+  }
+  
+  if (filters.assignedToId) {
+    where.assignedToId = filters.assignedToId;
+  }
+  
+  if (filters.region) {
+    where.region = { contains: filters.region, mode: 'insensitive' };
+  }
+  
+  // Get leads with related data needed for export
+  const leads = await prisma.lead.findMany({
+    where,
+    orderBy: { lastActivity: 'desc' },
+    select: {
+      name: true,
+      email: true,
+      phone: true,
+      company: true,
+      position: true,
+      stage: true,
+      source: true,
+      confidence: true,
+      priority: true,
+      createdAt: true,
+      lastActivity: true,
+      region: true,
+      tags: true,
+      notes: true,
+      assignedTo: {
+        select: {
+          name: true,
+          email: true
+        }
+      },
+      user: {
+        select: {
+          name: true
+        }
+      },
+      conversations: {
+        orderBy: { date: 'desc' },
+        take: 1,
+      },
+      tasks: {
+        where: { status: 'PENDING' },
+        orderBy: { dueDate: 'asc' },
+        take: 1,
+      }
+    }
+  });
+  
+  // Transform data for CSV export
+  const leadsForExport = leads.map(lead => {
+    const lastConversation = lead.conversations?.[0];
+    const pendingTask = lead.tasks?.[0];
+    
+    return {
+      'Name': lead.name || '',
+      'Email': lead.email || '',
+      'Phone': lead.phone || '',
+      'Company': lead.company || '',
+      'Position': lead.position || '',
+      'Stage': lead.stage || '',
+      'Source': lead.source || '',
+      'Confidence': lead.confidence || 0,
+      'Priority': lead.priority || 0,
+      'Created Date': lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : '',
+      'Last Activity': lead.lastActivity ? new Date(lead.lastActivity).toLocaleDateString() : '',
+      'Owner': lead.user?.name || '',
+      'Assigned To': lead.assignedTo?.name || '',
+      'Location': lead.region || '',
+      'Tags': (lead.tags as string[] || []).join(', '),
+      'Last Conversation': lastConversation ? new Date(lastConversation.date).toLocaleDateString() : '',
+      'Last Conversation Summary': lastConversation?.content || '',
+      'Next Pending Task': pendingTask?.title || '',
+      'Next Task Due Date': pendingTask?.dueDate ? new Date(pendingTask.dueDate).toLocaleDateString() : '',
+      'Notes': lead.notes || ''
+    };
+  });
+  
+  // Generate CSV
+  const fields = [
+    'Name', 'Email', 'Phone', 'Company', 'Position', 'Stage', 'Source', 
+    'Confidence', 'Priority', 'Created Date', 'Last Activity', 
+    'Owner', 'Assigned To', 'Location', 'Tags', 'Website', 'LinkedIn', 
+    'Twitter', 'Last Conversation', 'Last Conversation Summary',
+    'Next Pending Task', 'Next Task Due Date', 'Notes'
+  ];
+  
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(leadsForExport);
+  
+  // Generate filename with date
+  const date = new Date().toISOString().split('T')[0];
+  const filename = `leads-export-${date}.csv`;
+  
+  return { csv, filename };
 }

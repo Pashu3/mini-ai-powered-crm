@@ -1,3 +1,12 @@
+/**
+ * API Route: GET /api/dashboard/metrics/[metric]
+ * 
+ * Dynamic route that returns historical metrics data for a specific metric
+ * Valid metrics: leads, conversations, conversions
+ * 
+ * Query parameters:
+ * - months: number (optional) - Number of months to retrieve (default: 6)
+ */
 export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -5,36 +14,38 @@ import { authOptions } from '@/lib/authOptions';
 import { getHistoricalMetrics } from '@/services/dashboard-service';
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils';
 
-type Params = Promise<{ metric: string }>;
-
+// Fix the parameter type to match Next.js expectation
 export async function GET(
   req: NextRequest,
-  context: { params: Params }
+  context: { params: Promise<{ metric: string }> }
 ) {
+  const { metric } = await context.params;
+
   try {
-    const params = await context.params;
-    const metric = params.metric;
-    
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return unauthorizedResponse();
     }
-    
+
     const userId = session.user.id;
     const { searchParams } = new URL(req.url);
-    const months = Number(searchParams.get('months')) || 6;
-    
-    // Validate metric
-    const validMetrics = ['leads', 'conversations', 'conversions'];
-    if (!validMetrics.includes(metric)) {
-      return errorResponse('Invalid metric requested');
+
+    if (!['leads', 'conversations', 'conversions'].includes(metric)) {
+      return errorResponse(
+        `Invalid metric: ${metric}. Valid options are: leads, conversations, conversions`
+      );
     }
-    
-    const data = await getHistoricalMetrics(userId, metric, months);
-    return successResponse(data);
+
+    const months = Number(searchParams.get('months')) || 6;
+    if (months < 1 || months > 24) {
+      return errorResponse('Invalid months parameter. Must be between 1 and 24');
+    }
+
+    const metricData = await getHistoricalMetrics(userId, metric, months);
+    return successResponse(metricData);
   } catch (error: any) {
-    console.error('Error fetching metric data:', error);
+    console.error(`Error fetching ${metric} metrics:`, error);
     return errorResponse(error.message);
   }
 }

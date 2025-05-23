@@ -24,15 +24,16 @@ import { useSocketContext } from "@/providers/SocketProvider";
 import { NotificationPanelProps, Notification } from "@/types/notifications";
 import { getNotificationIcon } from "@/utils/styleHelpers";
 import { formatNotificationTime } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(false);
   const [markingAllRead, setMarkingAllRead] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
-  const { isConnected, lastNotification } = useSocketContext();
+  const { isConnected, lastNotification, notificationCount, updateNotificationCount } = useSocketContext();
   const panelRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
@@ -69,16 +70,26 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/notifications${activeTab === 'unread' ? '?unreadOnly=true' : ''}`);
+      const endpoint = activeTab === 'unread'
+        ? '/api/notifications/unread'
+        : '/api/notifications';
+
+      const response = await fetch(endpoint);
 
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
 
       const data = await response.json();
-      const notificationsData = data.success && data.data ? data.data : data;
+      const notificationsData = data.success && data.data ? data.data : [];
 
       setNotifications(notificationsData);
+
+      // Update unread count in the context
+      if (activeTab === 'all') {
+        const unreadCount = notificationsData.filter((n: Notification) => !n.isRead).length;
+        updateNotificationCount(unreadCount);
+      }
     } catch (error) {
       console.error('Error fetching notifications:', error);
     } finally {
@@ -86,33 +97,44 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
     }
   };
 
-  const markAsRead = async (id: string) => {
-    try {
-      setNotifications(prev =>
-        prev.map(n => n.id === id ? { ...n, isRead: true } : n)
-      );
+const markAsRead = async (id: string) => {
+  try {
+    const wasUnread = notifications.find(n => n.id === id)?.isRead === false;
+    
+    setNotifications(prev =>
+      prev.map(n => n.id === id ? { ...n, isRead: true } : n)
+    );
 
-      const response = await fetch(`/api/notifications/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to mark notification as read');
-      }
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-      fetchNotifications();
+    if (wasUnread) {
+      updateNotificationCount(prevCount => Math.max(0, prevCount - 1));
     }
-  };
+
+    const response = await fetch(`/api/notifications/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to mark notification as read');
+    }
+    
+    // No need to fetch unread count again as we've already updated it optimistically
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    // In case of error, refresh both notifications and count to ensure consistency
+    fetchNotifications();
+  }
+};
 
   const markAllAsRead = async () => {
     try {
       setMarkingAllRead(true);
 
+      // Optimistic update
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      updateNotificationCount(0);
 
       const response = await fetch('/api/notifications', {
         method: 'PUT',
@@ -126,7 +148,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
       }
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
-      fetchNotifications();
+      fetchNotifications(); // Refetch on error
     } finally {
       setMarkingAllRead(false);
     }
@@ -134,7 +156,15 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
 
   const deleteNotification = async (id: string) => {
     try {
+      const wasUnread = notifications.find(n => n.id === id)?.isRead === false;
+
+      // Optimistic update
       setNotifications(prev => prev.filter(n => n.id !== id));
+
+      // Update unread count if needed
+      if (wasUnread) {
+        updateNotificationCount(prevCount => Math.max(0, prevCount - 1));
+      }
 
       const response = await fetch(`/api/notifications/${id}`, {
         method: 'DELETE',
@@ -148,7 +178,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
       }
     } catch (error) {
       console.error('Error deleting notification:', error);
-      fetchNotifications();
+      fetchNotifications(); // Refetch on error
     }
   };
 
@@ -176,7 +206,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
     }
 
     markAsRead(notification.id);
-    window.location.href = url;
+    router.push(url);
     onClose();
   };
 
@@ -189,12 +219,13 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-9999 overflow-hidden">
+        <div className="fixed inset-0 z-50 overflow-hidden">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
+            className="absolute inset-0"
           />
 
           {/* Panel */}
@@ -205,11 +236,12 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="bg-card border border-border shadow-lg rounded-lg w-[min(calc(100vw-4rem),370px)] max-h-[calc(100vh-5rem)] flex flex-col overflow-hidden"            >
+              className="bg-card border border-border shadow-lg rounded-lg w-[min(calc(100vw-2rem),400px)] max-h-[calc(100vh-5rem)] flex flex-col overflow-hidden"
+            >
               {/* Header */}
               <div className="p-4 border-b border-border flex justify-between items-center">
                 <h2 className="font-semibold text-lg flex items-center gap-2">
-                  <Bell size={18} />
+                  <Bell size={18} className="text-primary" />
                   Notifications
                   {unreadCount > 0 && (
                     <span className="bg-primary text-primary-foreground text-xs rounded-full px-2 py-0.5">
@@ -243,8 +275,8 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
                 <button
                   onClick={() => setActiveTab('all')}
                   className={`flex-1 py-2 text-sm font-medium ${activeTab === 'all'
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                     }`}
                 >
                   All
@@ -252,8 +284,8 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
                 <button
                   onClick={() => setActiveTab('unread')}
                   className={`flex-1 py-2 text-sm font-medium ${activeTab === 'unread'
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                     }`}
                 >
                   Unread
@@ -288,7 +320,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
                     {filteredNotifications.map((notification) => (
                       <li
                         key={notification.id}
-                        className={`p-4 hover:bg-muted/50 ${!notification.isRead ? 'bg-primary/5' : ''}`}
+                        className={`p-4 hover:bg-muted/50 transition-colors ${!notification.isRead ? 'bg-primary/5' : ''}`}
                       >
                         <div className="flex gap-3">
                           <div className="flex-shrink-0 mt-1">
@@ -303,7 +335,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
                                 {formatNotificationTime(notification.createdAt)}
                               </div>
                             </div>
-                            <p className="text-sm text-muted-foreground mt-1">
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                               {notification.message}
                             </p>
 
@@ -347,7 +379,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
               <div className="border-t border-border p-3 flex justify-center">
                 <button
                   onClick={() => {
-                    window.location.href = '/dashboard/notifications';
+                    router.push('/dashboard/notifications');
                     onClose();
                   }}
                   className="text-sm text-primary hover:underline"
