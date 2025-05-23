@@ -22,7 +22,7 @@ An advanced customer relationship management system with built-in AI capabilitie
 * **Theme Support**: Light and Dark themes available; dark theme recommended for optimal user experience
 * **JWT-Based Authentication**: Simple and secure authentication using JSON Web Tokens (JWT)
 
-📘 *For a more in-depth overview of the system and its features, refer to the full documentation here: [documentation.md](https://github.com/Pashu3/mini-ai-powered-crm/blob/main/documentation.md)*
+📘 *For a more in-depth overview of the system and its features, refer to the full documentation here: [documentation.md](https://github.com/Pashu3/mini-ai-powered-crm/blob/main/documentation.md)*.
 
 ---
 
