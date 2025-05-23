@@ -14,26 +14,26 @@ export default function DashboardLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen(prev => !prev);
   }, []);
-  
+
   const toggleSidebarCollapse = useCallback(() => {
     setIsSidebarCollapsed(prev => !prev);
   }, []);
 
   useEffect(() => {
     let resizeTimer: NodeJS.Timeout;
-    
+
     const checkIfMobile = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         const isMobileView = window.innerWidth < 1024;
-        
+
         if (isMobileView !== isMobile) {
           setIsMobile(isMobileView);
-          
+
           if (isMobileView) {
             setIsSidebarOpen(false);
             setIsSidebarCollapsed(false);
@@ -42,19 +42,19 @@ export default function DashboardLayout({
             setIsSidebarCollapsed(false);
           }
         }
-      }, 100); 
+      }, 100);
     };
-    
+
     checkIfMobile();
-    
+
     window.addEventListener('resize', checkIfMobile);
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('resize', checkIfMobile);
       clearTimeout(resizeTimer);
     };
-  }, [isMobile]); 
+  }, [isMobile]);
 
   const sidebarWidth = isSidebarCollapsed ? 72 : 240;
 
@@ -63,32 +63,32 @@ export default function DashboardLayout({
       {/* Sidebar - fixed, non-scrollable */}
       <div
         className={`${isMobile ? "fixed" : "sticky top-0"} h-screen z-30 transition-all duration-200 overflow-hidden`}
-        style={{ 
-          width: !isMobile ? (isSidebarCollapsed ? '72px' : '240px') : '0px',
-          transform: (isMobile && isSidebarOpen) ? 'translateX(0)' : (isMobile ? `translateX(-${sidebarWidth}px)` : 'none'),
+        style={{
+          width: isMobile ? `${sidebarWidth}px` : (isSidebarCollapsed ? '72px' : '240px'),
+          transform: (isMobile && !isSidebarOpen) ? `translateX(-100%)` : 'translateX(0)',
           height: '100vh'
         }}
       >
-        <SidebarNav 
+        <SidebarNav
           onClose={isMobile ? () => setIsSidebarOpen(false) : undefined}
           isCollapsed={!isMobile && isSidebarCollapsed}
           onToggleCollapse={!isMobile ? toggleSidebarCollapse : undefined}
         />
       </div>
-      
+
       {/* Mobile overlay */}
       {isMobile && isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20" 
+        <div
+          className="fixed inset-0  z-50"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-      
+
       {/* Main content area - scrollable */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <Header 
-          isSidebarOpen={isSidebarOpen} 
-          toggleSidebar={toggleSidebar} 
+        <Header
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
         />
         <main className="p-6 flex-1 overflow-y-auto">
           {children}
