@@ -79,7 +79,7 @@ export default function DashboardLayout({
       {/* Mobile overlay */}
       {isMobile && isSidebarOpen && (
         <div
-          className="fixed inset-0  z-50"
+          className="fixed inset-0  z-20"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
