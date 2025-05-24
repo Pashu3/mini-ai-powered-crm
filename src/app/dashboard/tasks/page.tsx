@@ -58,6 +58,29 @@ export default function TasksPage() {
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<string>("dueDate");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  // Toggle for mobile card view
+  const [showCardView, setShowCardView] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Add overflow-x-hidden to body to prevent horizontal scroll
+    document.body.classList.add("overflow-x-hidden");
+    
+    // Check screen size for initial view type
+    const checkScreenSize = () => {
+      setShowCardView(window.innerWidth < 768);
+    };
+    
+    // Set initial value
+    checkScreenSize();
+    
+    // Add event listener for resize
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => {
+      document.body.classList.remove("overflow-x-hidden");
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchTasks() {
@@ -270,7 +293,7 @@ export default function TasksPage() {
   }, {} as Record<string, number>);
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -289,7 +312,8 @@ export default function TasksPage() {
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2"
         >
           <Plus size={16} />
-          New Task
+          <span className="hidden sm:inline">New Task</span>
+          <span className="sm:hidden">New</span>
         </Link>
       </motion.div>
       
@@ -354,7 +378,7 @@ export default function TasksPage() {
           />
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <span className="text-sm text-muted-foreground">Priority:</span>
           <div className="relative">
             <select
@@ -369,51 +393,125 @@ export default function TasksPage() {
             </select>
             <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           </div>
+          
+          {/* Toggle between table and card view on smaller screens */}
+          <button 
+            className="md:hidden px-3 py-1.5 text-sm border border-input rounded-md"
+            onClick={() => setShowCardView(!showCardView)}
+          >
+            {showCardView ? "Table View" : "Card View"}
+          </button>
         </div>
       </div>
       
-      {/* Tasks Table */}
-      <div className="border border-border rounded-lg overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 size={24} className="animate-spin text-primary mr-2" />
-            <span>Loading tasks...</span>
+      {/* Tasks Table/Cards Container */}
+      {loading ? (
+        <div className="flex items-center justify-center py-12 border border-border rounded-lg">
+          <Loader2 size={24} className="animate-spin text-primary mr-2" />
+          <span>Loading tasks...</span>
+        </div>
+      ) : filteredAndSortedTasks.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 px-4 text-center border border-border rounded-lg">
+          <ClipboardList size={48} className="text-muted-foreground/30 mb-4" />
+          <h3 className="text-lg font-medium mb-1">No tasks found</h3>
+          <p className="text-muted-foreground max-w-md mb-4">
+            {searchQuery || statusFilter !== "all" || priorityFilter !== "all"
+              ? "No tasks match your current search or filters. Try adjusting your criteria."
+              : "You don't have any tasks yet. Create your first task to get started."}
+          </p>
+          <div className="flex gap-3">
+            {(searchQuery || statusFilter !== "all" || priorityFilter !== "all") && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setStatusFilter("all");
+                  setPriorityFilter("all");
+                }}
+                className="px-4 py-2 border border-input rounded-md text-sm"
+              >
+                Clear Filters
+              </button>
+            )}
+            
+            <Link
+              href="/dashboard/tasks/new"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm flex items-center gap-1"
+            >
+              <Plus size={14} />
+              Create Task
+            </Link>
           </div>
-        ) : filteredAndSortedTasks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-            <ClipboardList size={48} className="text-muted-foreground/30 mb-4" />
-            <h3 className="text-lg font-medium mb-1">No tasks found</h3>
-            <p className="text-muted-foreground max-w-md mb-4">
-              {searchQuery || statusFilter !== "all" || priorityFilter !== "all"
-                ? "No tasks match your current search or filters. Try adjusting your criteria."
-                : "You don't have any tasks yet. Create your first task to get started."}
-            </p>
-            <div className="flex gap-3">
-              {(searchQuery || statusFilter !== "all" || priorityFilter !== "all") && (
-                <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setStatusFilter("all");
-                    setPriorityFilter("all");
-                  }}
-                  className="px-4 py-2 border border-input rounded-md text-sm"
+        </div>
+      ) : showCardView ? (
+        // Mobile Card View
+        <div className="grid grid-cols-1 gap-4">
+          {filteredAndSortedTasks.map((task) => (
+            <div 
+              key={task.id}
+              className="border border-border rounded-lg p-4 hover:bg-muted/30 transition-colors"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <Link 
+                  href={`/dashboard/tasks/${task.id}`}
+                  className="font-medium hover:text-primary truncate block"
                 >
-                  Clear Filters
-                </button>
+                  {task.title}
+                </Link>
+                
+                <span className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(task.priority)}`}>
+                  {getPriorityLabel(task.priority)}
+                </span>
+              </div>
+              
+              <div className="flex flex-wrap gap-3 mb-3">
+                <span className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full border ${getStatusColor(task.status)}`}>
+                  {getStatusIcon(task.status)}
+                  {getStatusLabel(task.status)}
+                </span>
+                
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={14} className="text-muted-foreground flex-shrink-0" />
+                  <span className="text-sm">{formatDate(task.dueDate)}</span>
+                </div>
+              </div>
+              
+              {task.lead && (
+                <div className="flex items-center gap-1.5 mb-3">
+                  <User size={14} className="text-primary flex-shrink-0" />
+                  <Link href={`/dashboard/leads/${task.leadId}`} className="text-sm hover:text-primary">
+                    {task.lead.name}
+                  </Link>
+                </div>
               )}
               
-              <Link
-                href="/dashboard/tasks/new"
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm flex items-center gap-1"
-              >
-                <Plus size={14} />
-                Create Task
-              </Link>
+              <div className="flex justify-end gap-2 pt-2 border-t border-border/50 mt-2">
+                <Link
+                  href={`/dashboard/tasks/${task.id}?edit=true`}
+                  className="p-2 rounded-md hover:bg-muted transition-colors"
+                  title="Edit task"
+                >
+                  <Pencil size={16} />
+                  <span className="sr-only">Edit</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setTaskToDelete(task.id);
+                    setDeleteModalOpen(true);
+                  }}
+                  className="p-2 rounded-md text-destructive hover:bg-destructive/10 transition-colors"
+                  title="Delete task"
+                >
+                  <Trash2 size={16} />
+                  <span className="sr-only">Delete</span>
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px]">
+          ))}
+        </div>
+      ) : (
+        <div className="max-w-full">
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full">
               <thead className="bg-muted/50 text-sm font-medium">
                 <tr>
                   <th 
@@ -532,10 +630,9 @@ export default function TasksPage() {
               </tbody>
             </table>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       
-      {/* Delete confirmation modal */}
       <DeleteConfirmModal
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
