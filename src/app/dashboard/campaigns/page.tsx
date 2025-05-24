@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
-  Loader2, 
-  PlusCircle, 
-  Search, 
-  Settings, 
-  Megaphone, 
-  BarChart3, 
+import {
+  Loader2,
+  PlusCircle,
+  Search,
+  Settings,
+  Megaphone,
+  BarChart3,
   Calendar,
   Users,
   Mail,
@@ -38,24 +38,24 @@ export default function CampaignsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   useEffect(() => {
     async function fetchCampaigns() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const response = await fetch('/api/campaigns');
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch campaigns: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        const campaignsData = data.success && data.data 
-          ? data.data 
+        const campaignsData = data.success && data.data
+          ? data.data
           : (Array.isArray(data) ? data : []);
-        
+
         setCampaigns(campaignsData);
       } catch (err) {
         console.error("Error fetching campaigns:", err);
@@ -64,43 +64,42 @@ export default function CampaignsPage() {
         setLoading(false);
       }
     }
-    
+
     fetchCampaigns();
   }, []);
-  
-  
-  // Filter campaigns based on search query
-  const filteredCampaigns = campaigns.filter(campaign => 
-    campaign.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+
+
+  const filteredCampaigns = campaigns.filter(campaign =>
+    campaign.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (campaign.description && campaign.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-  
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Campaigns</h1>
           <p className="text-muted-foreground mt-1">
             Create and manage your outreach campaigns
           </p>
         </div>
-        
-        <Link 
+
+        <Link
           href="/dashboard/campaigns/new"
-          className="bg-primary text-primary-foreground px-4 py-2 rounded-md inline-flex items-center gap-2 hover:bg-primary/90 transition-colors"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-md inline-flex items-center gap-2 hover:bg-primary/90 transition-colors w-full sm:w-auto justify-center sm:justify-start mt-2 sm:mt-0"
         >
           <PlusCircle size={16} />
           New Campaign
         </Link>
       </div>
-      
+
       {error && (
         <div className="bg-destructive/10 text-destructive p-4 rounded-md border border-destructive/20 flex items-center gap-2">
           <AlertCircle size={16} />
           {error}
         </div>
       )}
-      
+
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
         <input
@@ -111,7 +110,7 @@ export default function CampaignsPage() {
           className="pl-10 pr-4 py-2 w-full border border-input rounded-md bg-background"
         />
       </div>
-      
+
       {loading ? (
         <div className="flex justify-center items-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -130,11 +129,10 @@ export default function CampaignsPage() {
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="font-medium text-xl truncate">{campaign.name}</h3>
-                      <div className={`rounded-full px-2 py-0.5 text-xs inline-flex items-center gap-1 ${
-                        campaign.isActive 
-                          ? 'bg-emerald-100 text-emerald-700' 
+                      <div className={`rounded-full px-2 py-0.5 text-xs inline-flex items-center gap-1 ${campaign.isActive
+                          ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-gray-100 text-gray-700'
-                      }`}>
+                        }`}>
                         {campaign.isActive ? (
                           <><CheckCircle size={12} /> Active</>
                         ) : (
@@ -142,11 +140,11 @@ export default function CampaignsPage() {
                         )}
                       </div>
                     </div>
-                    
+
                     <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
                       {campaign.description || "No description provided"}
                     </p>
-                    
+
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Users size={14} />

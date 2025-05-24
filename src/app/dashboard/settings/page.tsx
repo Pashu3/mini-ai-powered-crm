@@ -159,7 +159,6 @@ export default function SettingsPage() {
     });
   };
 
-  // Check if there are unsaved changes
   const hasChanges = JSON.stringify(preferences) !== JSON.stringify(originalPreferences);
 
   if (loading) {
@@ -217,7 +216,7 @@ export default function SettingsPage() {
               ) : (
                 <>
                   <Save size={16} />
-                  Save Changes
+                  Save
                 </>
               )}
             </button>

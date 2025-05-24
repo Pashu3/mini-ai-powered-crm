@@ -516,7 +516,7 @@ function LeadsContent() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-1 w-36 bg-card border border-border rounded-md shadow-md z-10 overflow-hidden"
+                  className="absolute right-0 sm:right-0 left-0 sm:left-auto mt-1 w-36 bg-card border border-border rounded-md shadow-md z-10 overflow-hidden"
                 >
                   <button
                     onClick={() => updateFilters({ view: 'table' })}
@@ -720,7 +720,7 @@ function LeadsContent() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full right-0 mt-1 w-72 bg-card border border-border rounded-md shadow-md z-10"
+                    className="absolute top-full right-0 sm:right-0 left-0 sm:left-auto mt-1 w-48 md:w-72 bg-card border border-border rounded-md shadow-md z-10"
                   >
                     <div className="p-3 space-y-4">
                       {/* Priority selector */}
