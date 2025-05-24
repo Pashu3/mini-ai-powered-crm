@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ArrowLeft, 
-  User, 
-  Building, 
-  Mail, 
-  Phone, 
+import {
+  ArrowLeft,
+  User,
+  Building,
+  Mail,
+  Phone,
   Tag,
   Briefcase,
   BarChart,
@@ -34,7 +34,7 @@ import { getStageColor, getSourceColor } from "@/utils/styleHelpers";
 export default function NewLeadPage() {
   const router = useRouter();
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -51,15 +51,15 @@ export default function NewLeadPage() {
     confidence: 50,
     notes: '',
   });
-  
+
   const [includeTask, setIncludeTask] = useState(false);
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
     dueDate: '',
-    priority: 2, 
+    priority: 2,
   });
-  
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentTag, setCurrentTag] = useState('');
@@ -69,23 +69,23 @@ export default function NewLeadPage() {
     const bodyElement = document.querySelector('body');
     if (bodyElement) {
       bodyElement.style.overflow = 'hidden';
-      
+
       return () => {
         bodyElement.style.overflow = '';
       };
     }
   }, []);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setTaskData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const handleAddTag = () => {
     if (currentTag && !formData.tags.includes(currentTag)) {
       setFormData(prev => ({
@@ -95,27 +95,27 @@ export default function NewLeadPage() {
       setCurrentTag('');
     }
   };
-  
+
   const handleRemoveTag = (tag: string) => {
     setFormData(prev => ({
       ...prev,
       tags: prev.tags.filter(t => t !== tag)
     }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
       setError(null);
-      
+
       const payload = {
         ...formData,
         score: formData.score ? parseInt(formData.score) : undefined,
         priority: Number(formData.priority),
         confidence: Number(formData.confidence),
       };
-      
+
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
@@ -123,16 +123,16 @@ export default function NewLeadPage() {
         },
         body: JSON.stringify(payload),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to create lead');
       }
-      
+
       const data = await response.json();
-      
+
       const leadId = data.success && data.data ? data.data.id : data.id;
-      
+
       if (includeTask && taskData.title && leadId) {
         const taskPayload = {
           ...taskData,
@@ -140,7 +140,7 @@ export default function NewLeadPage() {
           leadId: leadId,
           status: "PENDING"
         };
-        
+
         try {
           const taskResponse = await fetch('/api/tasks', {
             method: 'POST',
@@ -149,7 +149,7 @@ export default function NewLeadPage() {
             },
             body: JSON.stringify(taskPayload),
           });
-          
+
           if (!taskResponse.ok) {
             console.error('Failed to create task, but lead was created successfully');
             toast({
@@ -169,14 +169,14 @@ export default function NewLeadPage() {
           });
         }
       }
-      
+
       toast({
         type: 'success',
         title: 'Success!',
         description: 'Lead created successfully',
         duration: 3000
       });
-      
+
       setTimeout(() => {
         if (leadId) {
           router.push(`/dashboard/leads/${leadId}`);
@@ -184,7 +184,7 @@ export default function NewLeadPage() {
           router.push('/dashboard/leads');
         }
       }, 1000);
-      
+
     } catch (err) {
       console.error('Error creating lead:', err);
       setError(err instanceof Error ? err.message : 'Failed to create lead');
@@ -199,79 +199,81 @@ export default function NewLeadPage() {
     }
   };
 
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="max-w-4xl mx-auto space-y-8 pb-12 overflow-visible" 
+      className="max-w-4xl mx-auto space-y-8 pb-12 overflow-visible"
     >
-      {/* Top navigation bar */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-border py-4 mb-6">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
+
+      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-border py-3 sm:py-4 mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-4xl mx-auto px-4 sm:px-0 gap-3">
           <div className="flex items-center gap-3">
-            <Link 
-              href="/dashboard/leads" 
-              className="p-2 rounded-full hover:bg-muted transition-colors"
+            <Link
+              href="/dashboard/leads"
+              className="p-2 rounded-full hover:bg-muted transition-colors shrink-0"
             >
               <ArrowLeft size={18} />
               <span className="sr-only">Back to leads</span>
             </Link>
-            
-            <h1 className="text-2xl font-bold tracking-tight">Create New Lead</h1>
+
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Create New Lead</h1>
           </div>
-          
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/dashboard/leads"
-              className="px-4 py-2 text-sm border border-input rounded-md hover:bg-muted transition-colors"
+              className="flex-1 sm:flex-auto px-3 sm:px-4 py-1.5 sm:py-2 text-sm border border-input rounded-md hover:bg-muted transition-colors text-center"
             >
               Cancel
             </Link>
-            
+
             <button
               type="submit"
               form="lead-form"
               disabled={loading}
-              className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70"
+              className="flex-1 sm:flex-auto px-3 sm:px-4 py-1.5 sm:py-2 text-sm bg-primary text-primary-foreground rounded-md flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70"
             >
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Creating...
+                  <span className="hidden xs:inline">Creating...</span>
+                  <span className="inline xs:hidden">...</span>
                 </>
               ) : (
                 <>
                   <Save size={16} />
-                  Create Lead
+                  <span className="hidden xs:inline">Create Lead</span>
+                  <span className="inline xs:hidden">Create</span>
                 </>
               )}
             </button>
           </div>
         </div>
       </div>
-      
+
       {/* Main content */}
-      <div className="px-4 sm:px-0">
+      <div className="md:px-4 px-0">
         <div className="flex items-center gap-2 mb-2 text-muted-foreground">
           <User size={16} />
           <p>Adding a new prospect to your CRM system</p>
         </div>
       </div>
-      
+
       {/* Status messages */}
       <AnimatePresence>
         {error && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-destructive/10 text-destructive p-4 rounded-md flex items-center gap-3 mx-4 sm:mx-0"
+            className="bg-destructive/10 text-destructive md:p-4 rounded-md flex items-center gap-3 mx-0 md:mx-4"
           >
             <AlertCircle size={20} />
             <p>{error}</p>
-            <button 
+            <button
               onClick={() => setError(null)}
               className="ml-auto p-1 rounded-full hover:bg-destructive/20 transition-colors"
             >
@@ -280,9 +282,9 @@ export default function NewLeadPage() {
             </button>
           </motion.div>
         )}
-        
+
         {successMessage && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -297,9 +299,9 @@ export default function NewLeadPage() {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 mx-4 sm:mx-0">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 md:mx-4 mx-0">
         <div className="space-y-6">
           <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-6 py-4 border-b border-border">
@@ -308,7 +310,7 @@ export default function NewLeadPage() {
                 Contact Information
               </h2>
             </div>
-            
+
             <form id="lead-form" onSubmit={handleSubmit} className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -331,7 +333,7 @@ export default function NewLeadPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label htmlFor="company" className="block text-sm font-medium">
                     Company
@@ -351,7 +353,7 @@ export default function NewLeadPage() {
                     />
                   </div>
                 </div>
-              
+
                 <div className="space-y-2">
                   <label htmlFor="email" className="block text-sm font-medium">
                     Email Address
@@ -371,7 +373,7 @@ export default function NewLeadPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label htmlFor="phone" className="block text-sm font-medium">
                     Phone Number
@@ -392,7 +394,7 @@ export default function NewLeadPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label htmlFor="position" className="block text-sm font-medium">
@@ -413,7 +415,7 @@ export default function NewLeadPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label htmlFor="linkedinUrl" className="block text-sm font-medium">
                     LinkedIn Profile
@@ -454,7 +456,7 @@ export default function NewLeadPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="pt-2">
                 <label htmlFor="notes" className="block text-sm font-medium mb-2">
                   Notes
@@ -486,17 +488,17 @@ export default function NewLeadPage() {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Add a follow-up task</span>
                 <label className="relative inline-flex items-center cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={includeTask} 
-                    onChange={() => setIncludeTask(!includeTask)} 
-                    className="sr-only peer" 
+                  <input
+                    type="checkbox"
+                    checked={includeTask}
+                    onChange={() => setIncludeTask(!includeTask)}
+                    className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-muted rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                 </label>
               </div>
             </div>
-            
+
             {includeTask && (
               <div className="p-6 space-y-6">
                 {/* Task Title */}
@@ -515,7 +517,7 @@ export default function NewLeadPage() {
                     required={includeTask}
                   />
                 </div>
-                
+
                 {/* Task Description */}
                 <div className="space-y-2">
                   <label htmlFor="taskDescription" className="block text-sm font-medium">
@@ -531,7 +533,7 @@ export default function NewLeadPage() {
                     rows={3}
                   />
                 </div>
-                
+
                 {/* Due Date & Priority */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Due Date */}
@@ -551,7 +553,7 @@ export default function NewLeadPage() {
                       />
                     </div>
                   </div>
-                  
+
                   {/* Priority */}
                   <div className="space-y-2">
                     <label htmlFor="taskPriority" className="block text-sm font-medium">
@@ -573,7 +575,7 @@ export default function NewLeadPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-muted/30 p-4 rounded-md flex items-start gap-3">
                   <Clock size={16} className="text-muted-foreground mt-0.5 flex-shrink-0" />
                   <div className="text-sm text-muted-foreground">
@@ -585,7 +587,7 @@ export default function NewLeadPage() {
             )}
           </div>
         </div>
-        
+
         <div className="space-y-6">
           <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-6 py-4 border-b border-border">
@@ -594,7 +596,7 @@ export default function NewLeadPage() {
                 Lead Status
               </h2>
             </div>
-            
+
             <div className="p-6 space-y-4">
               {/* Source */}
               <div className="space-y-2">
@@ -614,7 +616,7 @@ export default function NewLeadPage() {
                     </option>
                   ))}
                 </select>
-                
+
                 <div className="mt-3 flex items-center justify-center">
                   <span className={`inline-block px-4 py-1.5 text-sm font-medium rounded-full border ${getSourceColor(formData.source)}`}>
                     {formData.source.replace('_', ' ').charAt(0) + formData.source.replace('_', ' ').slice(1).toLowerCase()}
@@ -640,14 +642,14 @@ export default function NewLeadPage() {
                     </option>
                   ))}
                 </select>
-                
+
                 <div className="mt-3 flex items-center justify-center">
                   <span className={`inline-block px-4 py-1.5 text-sm font-medium rounded-full border ${getStageColor(formData.stage)}`}>
                     {formData.stage.charAt(0) + formData.stage.slice(1).toLowerCase()}
                   </span>
                 </div>
               </div>
-              
+
               {/* Confidence score */}
               <div className="space-y-2 pt-4">
                 <label htmlFor="confidence" className="block text-sm font-medium flex items-center justify-between">
@@ -669,13 +671,12 @@ export default function NewLeadPage() {
                     className="w-full pl-10 pr-4 py-2.5 border border-input bg-background rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   />
                 </div>
-                
+
                 <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full ${
-                      parseInt(String(formData.confidence)) >= 70 ? 'bg-green-500' : 
-                      parseInt(String(formData.confidence)) >= 40 ? 'bg-amber-500' : 'bg-red-500'
-                    }`}
+                  <div
+                    className={`h-full ${parseInt(String(formData.confidence)) >= 70 ? 'bg-green-500' :
+                        parseInt(String(formData.confidence)) >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                      }`}
                     style={{ width: `${Math.min(parseInt(String(formData.confidence)) || 0, 100)}%` }}
                   />
                 </div>
@@ -700,7 +701,7 @@ export default function NewLeadPage() {
                   <option value="5">5 - Very High</option>
                 </select>
 
-             
+
 
                 {formData.priority >= 3 && (
                   <div className="mt-2 text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
@@ -710,7 +711,7 @@ export default function NewLeadPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Tags Card */}
           <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-6 py-4 border-b border-border">
@@ -719,7 +720,7 @@ export default function NewLeadPage() {
                 Tags
               </h2>
             </div>
-            
+
             <div className="p-6 space-y-4">
               <div className="min-h-[40px] flex flex-wrap gap-2 mb-2">
                 {formData.tags.length === 0 ? (
@@ -728,13 +729,13 @@ export default function NewLeadPage() {
                   </div>
                 ) : (
                   formData.tags.map(tag => (
-                    <span 
-                      key={tag} 
+                    <span
+                      key={tag}
                       className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-1 group"
                     >
                       {tag}
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => handleRemoveTag(tag)}
                         className="rounded-full hover:bg-primary/20 p-0.5 opacity-70 group-hover:opacity-100 transition-opacity"
                       >
@@ -745,7 +746,7 @@ export default function NewLeadPage() {
                   ))
                 )}
               </div>
-              
+
               <div className="flex gap-2">
                 <div className="relative flex-grow">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -774,7 +775,7 @@ export default function NewLeadPage() {
                   <PlusCircle size={20} />
                 </button>
               </div>
-              
+
               <div className="pt-2 flex items-start gap-3 text-xs text-muted-foreground bg-muted/30 p-3 rounded-md">
                 <Info size={14} className="mt-0.5 flex-shrink-0" />
                 <p>Tags help categorize and filter leads. Press Enter or click the plus button to add a tag.</p>

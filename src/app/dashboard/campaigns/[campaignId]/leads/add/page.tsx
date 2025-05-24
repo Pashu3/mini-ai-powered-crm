@@ -80,8 +80,6 @@ export default function AddLeadsToCampaignPage() {
     fetchCampaign();
   }, [campaignId]);
 
-  // Fetch available leads
-  // Update the fetchLeads function:
 
   useEffect(() => {
     async function fetchLeads() {
@@ -96,10 +94,9 @@ export default function AddLeadsToCampaignPage() {
 
         const data = await response.json();
 
-        // Correctly access the leads array from the nested structure
         let leadsData;
         if (data.success && data.data && data.data.leads) {
-          leadsData = data.data.leads; // Properly access leads inside data.data.leads
+          leadsData = data.data.leads; 
         } else if (Array.isArray(data)) {
           leadsData = data;
         } else if (Array.isArray(data.data)) {
@@ -108,7 +105,6 @@ export default function AddLeadsToCampaignPage() {
           leadsData = [];
         }
 
-        // Filter out leads that are already in a campaign
         const availableLeads = leadsData.filter((lead: Lead) => !lead.campaignId);
         setLeads(availableLeads);
       } catch (err) {
@@ -196,7 +192,6 @@ export default function AddLeadsToCampaignPage() {
     }
   };
 
-  // Filter leads based on search query and filters
   const getFilteredLeads = () => {
     let filtered = leads;
 
@@ -256,42 +251,44 @@ export default function AddLeadsToCampaignPage() {
       className="space-y-6"
     >
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <Link
-            href={`/dashboard/campaigns/${campaignId}`}
-            className="p-2 rounded-full hover:bg-accent"
-          >
-            <ArrowLeft size={20} />
-            <span className="sr-only">Back to campaign</span>
-          </Link>
+  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+  <div className="flex items-center gap-4">
+    <Link
+      href={`/dashboard/campaigns/${campaignId}`}
+      className="p-2 rounded-full hover:bg-accent shrink-0"
+    >
+      <ArrowLeft size={20} />
+      <span className="sr-only">Back to campaign</span>
+    </Link>
 
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Add Leads to Campaign</h1>
-            <p className="text-muted-foreground">
-              Select leads to add to "{campaign.name}"
-            </p>
-          </div>
-        </div>
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Add Leads to Campaign</h1>
+      <p className="text-sm sm:text-base text-muted-foreground">
+        Select leads to add to "{campaign.name}"
+      </p>
+    </div>
+  </div>
 
-        <button
-          onClick={handleAddLeads}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2"
-          disabled={isSaving || selectedLeadIds.length === 0}
-        >
-          {isSaving ? (
-            <>
-              <Loader2 size={16} className="animate-spin" />
-              Adding...
-            </>
-          ) : (
-            <>
-              <UserPlus size={16} />
-              Add {selectedLeadIds.length} {selectedLeadIds.length === 1 ? 'Lead' : 'Leads'}
-            </>
-          )}
-        </button>
-      </div>
+  <button
+    onClick={handleAddLeads}
+    className="w-full sm:w-auto px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center justify-center sm:justify-start gap-2 mt-2 sm:mt-0"
+    disabled={isSaving || selectedLeadIds.length === 0}
+  >
+    {isSaving ? (
+      <>
+        <Loader2 size={16} className="animate-spin" />
+        Adding...
+      </>
+    ) : (
+      <>
+        <UserPlus size={16} />
+        <span className="whitespace-nowrap">
+          Add {selectedLeadIds.length} {selectedLeadIds.length === 1 ? 'Lead' : 'Leads'}
+        </span>
+      </>
+    )}
+  </button>
+</div>
 
       {/* Error message */}
       {error && (

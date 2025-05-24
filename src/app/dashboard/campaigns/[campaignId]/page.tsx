@@ -66,32 +66,32 @@ export default function CampaignDetailPage() {
   const router = useRouter();
   const params = useParams();
   const campaignId = params.campaignId as string;
-  
+
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'steps' | 'leads'>('overview');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   // Fetch campaign details
   useEffect(() => {
     async function fetchCampaign() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const response = await fetch(`/api/campaigns/${campaignId}`);
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch campaign: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        const campaignData = data.success && data.data 
-          ? data.data 
+        const campaignData = data.success && data.data
+          ? data.data
           : data;
-        
+
         setCampaign(campaignData);
       } catch (err) {
         console.error("Error fetching campaign:", err);
@@ -100,14 +100,14 @@ export default function CampaignDetailPage() {
         setLoading(false);
       }
     }
-    
+
     fetchCampaign();
   }, [campaignId]);
-  
+
   // Toggle campaign active status
   const handleToggleActive = async () => {
     if (!campaign) return;
-    
+
     try {
       const response = await fetch(`/api/campaigns/${campaignId}`, {
         method: 'PATCH',
@@ -116,36 +116,36 @@ export default function CampaignDetailPage() {
         },
         body: JSON.stringify({ isActive: !campaign.isActive }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to update campaign status');
       }
-      
+
       const data = await response.json();
-      const updatedCampaign = data.success && data.data 
-        ? data.data 
+      const updatedCampaign = data.success && data.data
+        ? data.data
         : data;
-      
+
       setCampaign(updatedCampaign);
     } catch (err) {
       console.error("Error updating campaign status:", err);
       setError("Failed to update campaign status. Please try again.");
     }
   };
-  
+
   // Delete the campaign
   const handleDeleteCampaign = async () => {
     try {
       setIsDeleting(true);
-      
+
       const response = await fetch(`/api/campaigns/${campaignId}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to delete campaign');
       }
-      
+
       router.push('/dashboard/campaigns');
     } catch (err) {
       console.error("Error deleting campaign:", err);
@@ -155,7 +155,7 @@ export default function CampaignDetailPage() {
       setIsDeleting(false);
     }
   };
-  
+
   // Helper function to get step type icon
   const getStepTypeIcon = (type: string) => {
     switch (type) {
@@ -173,7 +173,7 @@ export default function CampaignDetailPage() {
         return <Info size={16} className="text-gray-500" />;
     }
   };
-  
+
   // Helper function for readable step type
   const getReadableStepType = (type: string) => {
     switch (type) {
@@ -191,7 +191,7 @@ export default function CampaignDetailPage() {
         return type;
     }
   };
-  
+
   // Get the stage color based on stage name
   const getStageColor = (stage: string) => {
     switch (stage.toUpperCase()) {
@@ -213,7 +213,7 @@ export default function CampaignDetailPage() {
         return 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
-  
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -221,7 +221,7 @@ export default function CampaignDetailPage() {
       day: 'numeric',
     });
   };
-  
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -229,7 +229,7 @@ export default function CampaignDetailPage() {
       </div>
     );
   }
-  
+
   if (error && !campaign) {
     return (
       <div className="bg-destructive/10 text-destructive p-6 rounded-lg border border-destructive/20">
@@ -237,7 +237,7 @@ export default function CampaignDetailPage() {
         <h3 className="font-medium text-lg">Error loading campaign</h3>
         <p>{error}</p>
         <div className="flex gap-3 mt-4">
-          <Link 
+          <Link
             href="/dashboard/campaigns"
             className="px-4 py-2 bg-background border border-input rounded-md"
           >
@@ -247,9 +247,9 @@ export default function CampaignDetailPage() {
       </div>
     );
   }
-  
+
   if (!campaign) return null;
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -258,27 +258,26 @@ export default function CampaignDetailPage() {
       className="space-y-6"
     >
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard/campaigns"
-            className="p-2 rounded-full hover:bg-accent"
+            className="p-2 rounded-full hover:bg-accent shrink-0"
           >
             <ArrowLeft size={20} />
             <span className="sr-only">Back to campaigns</span>
           </Link>
-          
+
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
                 {campaign.name}
               </h1>
-              <span 
-                className={`px-2 py-0.5 text-xs rounded-full ${
-                  campaign.isActive 
-                    ? 'bg-emerald-100 text-emerald-700' 
+              <span
+                className={`px-2 py-0.5 text-xs rounded-full ${campaign.isActive
+                    ? 'bg-emerald-100 text-emerald-700'
                     : 'bg-amber-100 text-amber-700'
-                }`}
+                  }`}
               >
                 {campaign.isActive ? 'Active' : 'Paused'}
               </span>
@@ -288,47 +287,48 @@ export default function CampaignDetailPage() {
             </p>
           </div>
         </div>
-        
-        <div className="flex gap-2">
+
+        <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
           <button
             onClick={handleToggleActive}
-            className={`p-2 rounded-md flex items-center gap-1.5 text-sm ${
-              campaign.isActive 
-                ? 'bg-amber-50 text-amber-700 hover:bg-amber-100' 
+            className={`px-3 py-2 rounded-md flex items-center gap-1.5 text-sm ${campaign.isActive
+                ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                 : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-            }`}
+              } flex-grow sm:flex-grow-0`}
           >
             {campaign.isActive ? (
               <>
                 <ToggleLeft size={18} />
-                Pause Campaign
+                <span className="whitespace-nowrap">Pause Campaign</span>
               </>
             ) : (
               <>
                 <ToggleRight size={18} />
-                Activate Campaign
+                <span className="whitespace-nowrap">Activate Campaign</span>
               </>
             )}
           </button>
-          
-          <Link
-            href={`/dashboard/campaigns/${campaignId}/edit`}
-            className="p-2 rounded-md hover:bg-accent"
-          >
-            <Edit size={18} />
-            <span className="sr-only">Edit Campaign</span>
-          </Link>
-          
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="p-2 text-destructive hover:bg-destructive/10 rounded-md"
-          >
-            <Trash2 size={18} />
-            <span className="sr-only">Delete Campaign</span>
-          </button>
+
+          <div className="flex gap-2 ml-auto sm:ml-0">
+            <Link
+              href={`/dashboard/campaigns/${campaignId}/edit`}
+              className="p-2 rounded-md hover:bg-accent"
+            >
+              <Edit size={18} />
+              <span className="sr-only">Edit Campaign</span>
+            </Link>
+
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="p-2 text-destructive hover:bg-destructive/10 rounded-md"
+            >
+              <Trash2 size={18} />
+              <span className="sr-only">Delete Campaign</span>
+            </button>
+          </div>
         </div>
       </div>
-      
+
       {/* Error display */}
       {error && (
         <div className="bg-destructive/10 text-destructive p-4 rounded-md flex items-center gap-2">
@@ -336,27 +336,25 @@ export default function CampaignDetailPage() {
           {error}
         </div>
       )}
-      
+
       {/* Tabs */}
       <div className="border-b border-border">
         <div className="flex gap-6">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-1 py-3 font-medium text-sm border-b-2 ${
-              activeTab === 'overview' 
-                ? 'border-primary text-primary' 
+            className={`px-1 py-3 font-medium text-sm border-b-2 ${activeTab === 'overview'
+                ? 'border-primary text-primary'
                 : 'border-transparent hover:border-muted hover:text-foreground/80'
-            }`}
+              }`}
           >
             Overview
           </button>
           <button
             onClick={() => setActiveTab('steps')}
-            className={`px-1 py-3 font-medium text-sm border-b-2 flex items-center gap-1 ${
-              activeTab === 'steps' 
-                ? 'border-primary text-primary' 
+            className={`px-1 py-3 font-medium text-sm border-b-2 flex items-center gap-1 ${activeTab === 'steps'
+                ? 'border-primary text-primary'
                 : 'border-transparent hover:border-muted hover:text-foreground/80'
-            }`}
+              }`}
           >
             Steps
             <span className="bg-muted rounded-full px-1.5 py-0.5 text-xs">
@@ -365,11 +363,10 @@ export default function CampaignDetailPage() {
           </button>
           <button
             onClick={() => setActiveTab('leads')}
-            className={`px-1 py-3 font-medium text-sm border-b-2 flex items-center gap-1 ${
-              activeTab === 'leads' 
-                ? 'border-primary text-primary' 
+            className={`px-1 py-3 font-medium text-sm border-b-2 flex items-center gap-1 ${activeTab === 'leads'
+                ? 'border-primary text-primary'
                 : 'border-transparent hover:border-muted hover:text-foreground/80'
-            }`}
+              }`}
           >
             Leads
             <span className="bg-muted rounded-full px-1.5 py-0.5 text-xs">
@@ -378,7 +375,7 @@ export default function CampaignDetailPage() {
           </button>
         </div>
       </div>
-      
+
       {/* Tab content */}
       <div>
         {/* Overview Tab */}
@@ -387,7 +384,7 @@ export default function CampaignDetailPage() {
             {/* Campaign stats */}
             <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
               <h3 className="text-lg font-medium mb-4">Campaign Summary</h3>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-muted-foreground text-sm">Created</p>
@@ -408,12 +405,12 @@ export default function CampaignDetailPage() {
                   <p className="font-medium">{campaign.steps.length}</p>
                 </div>
               </div>
-              
+
               <div className="mt-6">
                 <p className="text-muted-foreground text-sm mb-2">Leads in Campaign</p>
                 <div className="flex items-center gap-2">
                   <div className="text-2xl font-bold">{campaign.leads.length}</div>
-                  
+
                   <Link
                     href={`/dashboard/campaigns/${campaignId}/leads/add`}
                     className="ml-auto text-sm text-primary flex items-center gap-1 hover:underline"
@@ -423,7 +420,7 @@ export default function CampaignDetailPage() {
                   </Link>
                 </div>
               </div>
-              
+
               {/* If you have campaign stats */}
               {campaign.stats && (
                 <div className="mt-6 pt-6 border-t border-border">
@@ -432,11 +429,11 @@ export default function CampaignDetailPage() {
                 </div>
               )}
             </div>
-            
+
             {/* Recent activity */}
             <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
               <h3 className="text-lg font-medium mb-4">Campaign Steps</h3>
-              
+
               {campaign.steps.length === 0 ? (
                 <div className="text-center py-6">
                   <ListChecks size={32} className="mx-auto text-muted-foreground/30 mb-2" />
@@ -452,28 +449,28 @@ export default function CampaignDetailPage() {
               ) : (
                 <div className="space-y-3">
                   {campaign.steps.map((step, index) => (
-                    <div 
-                      key={step.id} 
+                    <div
+                      key={step.id}
                       className="flex items-start gap-3 p-3 border border-border rounded-md"
                     >
                       <div className="flex items-center justify-center w-7 h-7 rounded-full bg-muted text-xs font-medium">
                         {index + 1}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           {getStepTypeIcon(step.type)}
                           <span className="font-medium">
                             {getReadableStepType(step.type)}
                           </span>
-                          
+
                           {step.type === 'WAIT' && (
                             <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">
                               {step.waitDays} {step.waitDays === 1 ? 'day' : 'days'} wait
                             </span>
                           )}
                         </div>
-                        
+
                         {step.content && (
                           <p className="text-sm text-muted-foreground truncate">
                             {step.content}
@@ -487,13 +484,13 @@ export default function CampaignDetailPage() {
             </div>
           </div>
         )}
-        
+
         {/* Steps Tab */}
         {activeTab === 'steps' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Campaign Steps</h2>
-              <Link 
+              <Link
                 href={`/dashboard/campaigns/${campaignId}/edit`}
                 className="px-3 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-1.5 text-sm"
               >
@@ -501,7 +498,7 @@ export default function CampaignDetailPage() {
                 Edit Steps
               </Link>
             </div>
-            
+
             {campaign.steps.length === 0 ? (
               <div className="text-center py-12 border border-dashed border-border rounded-md bg-muted/30">
                 <ListChecks size={48} className="mx-auto text-muted-foreground/30 mb-4" />
@@ -531,7 +528,7 @@ export default function CampaignDetailPage() {
                     <div className="absolute -left-14 bg-card border border-border rounded-full w-7 h-7 flex items-center justify-center text-xs">
                       {index + 1}
                     </div>
-                    
+
                     {/* Step details */}
                     <div className="bg-card border border-border p-5 rounded-lg">
                       <div className="flex items-center justify-between mb-4">
@@ -546,12 +543,12 @@ export default function CampaignDetailPage() {
                             )}
                           </h3>
                         </div>
-                        
+
                         <button className="p-1.5 hover:bg-accent rounded-md">
                           <MoreHorizontal size={16} />
                         </button>
                       </div>
-                      
+
                       {step.content && (
                         <div className="p-3 bg-muted/30 rounded-md mb-3">
                           <p className="text-sm whitespace-pre-wrap">
@@ -559,10 +556,10 @@ export default function CampaignDetailPage() {
                           </p>
                         </div>
                       )}
-                      
+
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>Added: {formatDate(step.createdAt)}</span>
-                        
+
                         {step.templateId && (
                           <span className="bg-primary/5 text-primary px-1.5 py-0.5 rounded text-xs">
                             Using template
@@ -576,13 +573,13 @@ export default function CampaignDetailPage() {
             )}
           </div>
         )}
-        
+
         {/* Leads Tab */}
         {activeTab === 'leads' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Campaign Leads</h2>
-              <Link 
+              <Link
                 href={`/dashboard/campaigns/${campaignId}/leads/add`}
                 className="px-3 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-1.5 text-sm"
               >
@@ -590,7 +587,7 @@ export default function CampaignDetailPage() {
                 Add Leads
               </Link>
             </div>
-            
+
             {campaign.leads.length === 0 ? (
               <div className="text-center py-12 border border-dashed border-border rounded-md bg-muted/30">
                 <Users size={48} className="mx-auto text-muted-foreground/30 mb-4" />
@@ -614,14 +611,14 @@ export default function CampaignDetailPage() {
                   <div>Stage</div>
                   <div className="text-right">Actions</div>
                 </div>
-                
+
                 {campaign.leads.map((lead) => (
-                  <div 
+                  <div
                     key={lead.id}
                     className="grid grid-cols-[1fr,1fr,auto,auto] gap-4 p-4 border-b border-border hover:bg-muted/30 transition-colors"
                   >
                     <div className="flex items-center">
-                      <Link 
+                      <Link
                         href={`/dashboard/leads/${lead.id}`}
                         className="font-medium hover:text-primary hover:underline"
                       >
@@ -660,11 +657,11 @@ export default function CampaignDetailPage() {
           </div>
         )}
       </div>
-      
+
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-background/80 flex items-center justify-center p-4 z-50">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-card border border-border p-6 rounded-lg shadow-lg max-w-md w-full"
@@ -674,14 +671,14 @@ export default function CampaignDetailPage() {
               Are you sure you want to delete "{campaign.name}"? This action cannot be undone and will remove all associated campaign data.
             </p>
             <div className="flex justify-end gap-3">
-              <button 
-                onClick={() => setShowDeleteConfirm(false)} 
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
                 className="px-4 py-2 border border-input rounded-md"
                 disabled={isDeleting}
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={handleDeleteCampaign}
                 className="px-4 py-2 bg-destructive text-destructive-foreground rounded-md flex items-center gap-2"
                 disabled={isDeleting}

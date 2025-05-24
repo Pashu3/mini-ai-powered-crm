@@ -388,12 +388,10 @@ function LeadsContent() {
     });
   };
 
-  // Handle lead deletion (now with soft delete option)
   const handleDeleteLead = async (id: string, useSoftDelete: boolean = true) => {
     try {
       setActionLoading(true);
 
-      // Use soft delete by default
       const endpoint = useSoftDelete
         ? `/api/leads/${id}?soft=true`
         : `/api/leads/${id}`;
@@ -475,7 +473,7 @@ function LeadsContent() {
     includeDeleted;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

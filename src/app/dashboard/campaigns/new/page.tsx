@@ -226,42 +226,43 @@ export default function NewCampaignPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/dashboard/campaigns"
-            className="p-2 rounded-full hover:bg-accent"
-          >
-            <ArrowLeft size={20} />
-            <span className="sr-only">Back to campaigns</span>
-          </Link>
-          
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Campaign</h1>
-            <p className="text-muted-foreground">
-              Set up a new automated outreach sequence
-            </p>
-          </div>
-        </div>
-        
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2"
-          disabled={isSaving}
-        >
-          {isSaving ? (
-            <>
-              <Loader2 size={16} className="animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save size={16} />
-              Create Campaign
-            </>
-          )}
-        </button>
-      </div>
+   {/* Responsive header */}
+<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+  <div className="flex items-center gap-4">
+    <Link
+      href="/dashboard/campaigns"
+      className="p-2 rounded-full hover:bg-accent shrink-0"
+    >
+      <ArrowLeft size={20} />
+      <span className="sr-only">Back to campaigns</span>
+    </Link>
+    
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Create Campaign</h1>
+      <p className="text-muted-foreground text-sm sm:text-base">
+        Set up a new automated outreach sequence
+      </p>
+    </div>
+  </div>
+  
+  <button
+    onClick={handleSave}
+    className="w-full sm:w-auto px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center justify-center sm:justify-start gap-2"
+    disabled={isSaving}
+  >
+    {isSaving ? (
+      <>
+        <Loader2 size={16} className="animate-spin" />
+        Saving...
+      </>
+    ) : (
+      <>
+        <Save size={16} />
+        Create Campaign
+      </>
+    )}
+  </button>
+</div>
       
       {/* Error message */}
       {error && (
@@ -314,7 +315,7 @@ export default function NewCampaignPage() {
             <h2 className="text-xl font-semibold">Campaign Steps</h2>
             <div className="relative group">
               <button
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2"
+                className="px-2md:px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2"
               >
                 <Plus size={16} />
                 Add Step
